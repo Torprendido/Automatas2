@@ -43,6 +43,7 @@ public class Frame extends javax.swing.JFrame {
         compilar = new javax.swing.JButton();
         lineasJSP = new javax.swing.JScrollPane();
         areaLineas = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +99,8 @@ public class Frame extends javax.swing.JFrame {
         areaLineas.setRows(5);
         lineasJSP.setViewportView(areaLineas);
 
+        jButton1.setText("jButton1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,6 +123,8 @@ public class Frame extends javax.swing.JFrame {
                         .addComponent(compilar)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -139,7 +144,8 @@ public class Frame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compilar))
+                    .addComponent(compilar)
+                    .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -208,6 +214,7 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JScrollPane areaJSP;
     private javax.swing.JTextArea areaLineas;
     private javax.swing.JButton compilar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane lineasJSP;

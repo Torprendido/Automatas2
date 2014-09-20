@@ -99,7 +99,7 @@ public class Frame extends javax.swing.JFrame {
         areaLineas.setRows(5);
         lineasJSP.setViewportView(areaLineas);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Tal Chois!!!");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

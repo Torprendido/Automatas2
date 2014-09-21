@@ -23,7 +23,6 @@ public class Semantico extends Arbol{
     private static boolean contiene(String id, String[][] tipos) {
         boolean existe = false;
         for (String[] t: tipos) {
-            System.out.println(t[1]);
             if (t[1].compareTo(id) == 0) {
                 existe = true;
                 break;

@@ -5,14 +5,15 @@ public class Arbol {
 
     private Arbol padre;
     private final ArrayList<Arbol> hijos;
-    private ArrayList<Variable> variables;
+    private final ArrayList<Variable> variables;
     
     public Arbol() {
+        variables = new ArrayList();
         padre = null;
         hijos = new ArrayList();
     }
 
-    public void setHijo(Arbol hijo) {
+    public void insertartHijo(Arbol hijo) {
         hijo.setPadre(this);
         hijos.add(hijo);
     }
@@ -31,5 +32,9 @@ public class Arbol {
     
     public Arbol getPadre() {
         return padre;
+    }
+    
+    public ArrayList<Variable> getVariables() {
+        return variables;
     }
 }

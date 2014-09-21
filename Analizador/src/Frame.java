@@ -43,7 +43,6 @@ public class Frame extends javax.swing.JFrame {
         compilar = new javax.swing.JButton();
         lineasJSP = new javax.swing.JScrollPane();
         areaLineas = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,8 +98,6 @@ public class Frame extends javax.swing.JFrame {
         areaLineas.setRows(5);
         lineasJSP.setViewportView(areaLineas);
 
-        jButton1.setText("Tal Predio!!!");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,8 +120,6 @@ public class Frame extends javax.swing.JFrame {
                         .addComponent(compilar)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -144,8 +139,7 @@ public class Frame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compilar)
-                    .addComponent(jButton1))
+                    .addComponent(compilar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -176,7 +170,9 @@ public class Frame extends javax.swing.JFrame {
             ids.add(lexemas.get(j).getId());
             lineas.add(lexemas.get(j).getLinea());
         }
-        mensaje.setText(new Sintaxis(ids, lineas).MensajeSintaxis());
+        String errores = new Sintaxis(ids, lineas).MensajeSintaxis();
+        errores = (errores.compareTo("") != 0 ? Semantico.MensajeSemantico(lexemas) : "");
+        mensaje.setText(errores);
         compilar.setEnabled(false);
     }//GEN-LAST:event_compilarActionPerformed
 
@@ -214,7 +210,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JScrollPane areaJSP;
     private javax.swing.JTextArea areaLineas;
     private javax.swing.JButton compilar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane lineasJSP;
@@ -351,10 +346,10 @@ public class Frame extends javax.swing.JFrame {
     public static String[][] ExtraerTiposDeDatos() {
         try{
             int n = 0;
-            BufferedReader palabras = new BufferedReader(new FileReader(new File("src/txts/tipo.txt")));
+            BufferedReader palabras = new BufferedReader(new FileReader(new File("src/txts/tiposDeDatos.txt")));
             while (palabras.readLine() != null) n ++;
             String aux[][] = new String[n][2];
-            palabras = new BufferedReader(new FileReader(new File("src/txts/palabras.txt")));
+            palabras = new BufferedReader(new FileReader(new File("src/txts/tiposDeDatos.txt")));
             for (String[] a : aux) {
                 String linea = palabras.readLine();
                 a[0] = linea.substring(2, linea.length()); //substrae desde el caracter 2

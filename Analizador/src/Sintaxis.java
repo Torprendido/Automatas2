@@ -81,7 +81,7 @@ public class Sintaxis {
                 agregarGramtica(pila, producciones.get(numPro - 1).getListas());
             }
         }
-        return "todo esta rico y delicioso";
+        return "";
     }
     
     public String MensajeSintaxis() {

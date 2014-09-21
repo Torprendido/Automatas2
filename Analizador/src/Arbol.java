@@ -8,7 +8,7 @@ public class Arbol {
     private ArrayList<Variable> variables;
     
     public Arbol() {
-        padre = new Arbol();
+        padre = null;
         hijos = new ArrayList();
     }
 

@@ -138,8 +138,8 @@ public class Frame extends javax.swing.JFrame {
                     .addComponent(lineasJSP))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compilar))
+                    .addComponent(compilar)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -172,7 +172,7 @@ public class Frame extends javax.swing.JFrame {
         }
         String errores = new Sintaxis(ids, lineas).MensajeSintaxis();
         new Semantico(lexemas).MensajeSemantico();
-        errores = errores.compareTo("") != 0 ? new Semantico(lexemas).MensajeSemantico() : "";
+        errores += errores.compareTo("") == 0 ? new Semantico(lexemas).MensajeSemantico() : errores;
         mensaje.setText(errores);
         compilar.setEnabled(false);
     }//GEN-LAST:event_compilarActionPerformed

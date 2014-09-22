@@ -6,15 +6,26 @@ public class Arbol {
     private Arbol padre;
     private final ArrayList<Arbol> hijos;
     private final ArrayList<Variable> variables;
+    private int nivel;
     
     public Arbol() {
         variables = new ArrayList();
         padre = null;
         hijos = new ArrayList();
+        nivel = 0;
+    }
+    
+    private void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+    
+    public int getNivel() {
+        return nivel;
     }
 
     public void insertartHijo(Arbol hijo) {
         hijo.setPadre(this);
+        hijo.setNivel(nivel ++);
         hijos.add(hijo);
     }
     

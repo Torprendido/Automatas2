@@ -1,3 +1,4 @@
+24funcion
 31entero
 51doble
 52flotante

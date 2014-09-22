@@ -16,10 +16,64 @@ public class Semantico extends Arbol{
     public String MensajeSemantico() {
         llenarArbol(arb, 0);
         checarUso(arb);
+        checarDuplicados(arb);
+        checarVariablesNoDefinidas(arb);
         return errores;
     }
     
-    private static boolean contiene(String id) {
+    private void checarVariablesNoDefinidas(Arbol arb) {
+        ArrayList<Variable> vars = arb.getVariables();
+        for (int i = 0; i < vars.size(); i++) {
+            if (vars.get(i).esDeclaracion()) {
+                boolean seEncuentra = true;
+                for (int j = 0; j < i; j++) {
+                    seEncuentra = (
+                            !vars.get(i).esDeclaracion() & vars.get(j).esDeclaracion() & 
+                            vars.get(i).getNombreVariable().compareTo(vars.get(j).getNombreVariable()) == 0
+                    );
+                    if (seEncuentra) break;
+                }
+                if (!seEncuentra) checarNivelSuperior(vars.get(i), arb.getPadre());;
+            }
+        }
+        for (Arbol a: arb.getHijos()) checarUso(a);
+    }
+    
+    private void checarNivelSuperior(Variable var, Arbol padre) {
+        if (padre == null) {
+            errores += "Variable nnunca inicializada, Linea: " + var.getLinea();
+            return;
+        }
+        for (Variable v: padre.getVariables()) {
+            if (var.getNombreVariable().compareTo(v.getNombreVariable()) == 0) return;
+        }
+        checarNivelSuperior(var, padre.getPadre());
+    }
+    
+    private void checarDuplicados(Arbol arb) {
+        ArrayList<Variable> vars = arb.getVariables();
+        for (int i = 0; i < vars.size(); i++) {
+            for (int j = i + 1; j < vars.size(); j++) {
+                boolean seEncuentra = (
+                        vars.get(i).esDeclaracion() &
+                        vars.get(j).esDeclaracion() &
+                        vars.get(i).getNombreVariable().compareTo(vars.get(j).getNombreVariable()) == 0
+                );
+                if (seEncuentra) {
+                    errores += "Variable \"" +
+                            vars.get(i).getNombreVariable() +
+                            "\" (Linea: " +
+                            vars.get(i).getLinea() +
+                            ") repetida en la linea: " +
+                            vars.get(j).getLinea() + "\n";
+                    break;
+                }
+            }
+        }
+        for (Arbol a: arb.getHijos()) checarDuplicados(a);
+    }
+    
+    private boolean contiene(String id) {
         for (String[] t: Frame.ExtraerTiposDeDatos()) if (t[1].compareTo(id) == 0) return true;
         return false;
     }

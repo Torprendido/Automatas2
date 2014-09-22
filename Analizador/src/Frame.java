@@ -171,8 +171,7 @@ public class Frame extends javax.swing.JFrame {
             lineas.add(lexemas.get(j).getLinea());
         }
         String errores = new Sintaxis(ids, lineas).MensajeSintaxis();
-        new Semantico(lexemas).MensajeSemantico();
-        errores += errores.compareTo("") == 0 ? new Semantico(lexemas).MensajeSemantico() : errores;
+        errores += errores.compareTo("") == 0 ? new Semantico(lexemas).MensajeSemantico() : "";
         mensaje.setText(errores);
         compilar.setEnabled(false);
     }//GEN-LAST:event_compilarActionPerformed

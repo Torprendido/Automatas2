@@ -19,15 +19,11 @@
 4 Caracteres Especiales  (
 5 Caracteres Especiales  [
 6 Caracteres Especiales  \
-7 Caracteres Especiales  {
 8 Caracteres Especiales  "
 9 Caracteres Especiales  '
 10Caracteres Especiales  )
 11Caracteres Especiales  ]
-12Caracteres Especiales  }
-13Caracteres Especiales  @
 40Caracteres Especiales  ,
 41Caracteres Especiales  ./
-42Caracteres Especiales  .
 49Caracteres Especiales  :
 58Caracteres Especiales  ~

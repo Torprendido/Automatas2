@@ -72,10 +72,13 @@ public class Sintaxis {
             else if (checarλ(pila)) pila.remove(pila.size() - 1);
             else {
                 x = BuscarX(ids.get(ids.size() - 1));
-                y = BuscarY(pila.get(pila.size() - 1), altoTabla);
-                if (x == tabla.length) return ids.get(ids.size() - 1) + "en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
-                if (y == altoTabla) return "Esperaba " + pila.get(pila.size() - 1) + "en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
-                if (tabla[x][y].compareTo("E") == 0) return "Esperaba: " + Esperando(y) + "en la linea numero: " + lineas.get(lineas.size() - 1)  + "\n";
+                y = BuscarY(pila.get(pila.size() - 1));
+                if (x == tabla.length) 
+                    return ids.get(ids.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
+                if (y == altoTabla) 
+                    return "Esperaba " + pila.get(pila.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
+                if (tabla[x][y].compareTo("E") == 0) 
+                    return "Esperaba: " + Esperando(y) + " en la linea numero: " + lineas.get(lineas.size() - 1)  + "\n";
                 int numPro = Integer.parseInt(tabla[x][y]);
                 pila.remove(pila.size() - 1);
                 agregarGramtica(pila, producciones.get(numPro - 1).getListas());
@@ -95,15 +98,15 @@ public class Sintaxis {
     }
 
     private int BuscarX(String s) {
-        System.out.print(s + "-> codigo ");
+        System.out.print(s + " -> codigo ");
         for (int i = 0; i < tabla.length; i++) if (tabla[i][0].compareTo(s) == 0) return i;
         return tabla.length;
     }
 
-    private int BuscarY(String s, int n) {
-        System.out.println(s + "-> pila");
-        for (int i = 0; i < n; i++) if (tabla[tabla.length - 1][i].compareTo(s) == 0) return i;
-        return n;
+    private int BuscarY(String s) {
+        System.out.println(s + " t-> pila");
+        for (int i = 0; i < altoTabla; i++) if (tabla[tabla.length - 1][i].compareTo(s) == 0) return i;
+        return altoTabla;
     }
 
     private boolean comapararTopes(ArrayList<String> ids, ArrayList<String> pila) {
@@ -138,9 +141,15 @@ public class Sintaxis {
     
     public String token(String numeroToken) {
         String[][] caracteres = Frame.ExtraerCarctaeresDeArchivo();
+        String[][] palabras = Frame.ExtraerPalabraReservada();
         for (String[] c: caracteres) {
             if (numeroToken.compareTo(c[1]) == 0) {
                 return c[0];
+            }
+        }
+        for (String[] p: palabras) {
+            if (numeroToken.compareTo(p[1]) == 0) {
+                return p[0];
             }
         }
         return "";//las tiene que encontrar, por lo tanto nunca retorna ""

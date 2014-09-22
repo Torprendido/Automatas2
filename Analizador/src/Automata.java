@@ -46,23 +46,23 @@ public class Automata {
             case 1:
             case 4:
                 lex.setToken("Variable no valida");
-                lex.setId("E1");
+                lex.setId("Variable no valida");
                 break;
             case 2:
                 lex.setToken("Comentario no valido");
-                lex.setId("E2");
+                lex.setId("Comentario no valido");
                 break;
             case 6:
                 lex.setToken("Numero no valido");
-                lex.setId("E3");
+                lex.setId("Numero no valido");
                 break;
             case 8:
                 lex.setToken("Cadena no valida");
-                lex.setId("E4");
+                lex.setId("Cadena no valida");
                 break;
             default:
                 lex.setToken("Error no identificado");
-                lex.setId("E5");
+                lex.setId("Error no identificado");
                 break;
         }
     }

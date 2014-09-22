@@ -36,7 +36,7 @@ AsigA>[λ]
 AsigM>[50][5 ]<nn>[11][5 ]<nn>[11]
 AsigM>[λ]
 var>[λ]
-var>[40]<d_variables>
+var>[40]<d_Variables>
 nn>[35] 
 nn>[λ]
 d_Comentarios>[33]

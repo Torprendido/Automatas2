@@ -4,52 +4,34 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 public class Sintaxis {
     
     private final ArrayList<String> ids;
-    private String[][] tabla; int altoTabla = 0;
+    private static String[][] tabla; static int altoTabla = 0;
     private final ArrayList<Produccion> producciones = new ArrayList();
     private final ArrayList<String> lineas;
     
     public Sintaxis(ArrayList<String> ids, ArrayList<String> lineas) {
         this.ids = ids;
         this.lineas = lineas;
+        CrearTablaSintaxis();
         try {
-            CrearTabla();
             CrearListaProduccion();
         } catch (IOException e) {}
     }
     
-    private void CrearTabla() throws FileNotFoundException, IOException {
-        BufferedReader txt = new BufferedReader(new FileReader(new File("src/txts/tablaSintaxis.txt")));
-        int largoTabla = txt.readLine().length()/2;
-        altoTabla = 0;
-        String aux;
-        do {
-            altoTabla ++;
-            aux = txt.readLine();
-        } while (aux != null);
-        tabla = new String[largoTabla][altoTabla];
-        txt = new BufferedReader(new FileReader(new File("src/txts/tablaSintaxis.txt")));
-        int j = 0;
-        do {
-            aux = txt.readLine();
-            if (aux != null) {
-                for (int i = 0; i < largoTabla; i++) {
-                    if (aux.length() > largoTabla*2 & i == largoTabla - 1) {
-                        tabla[largoTabla - 1][j] = aux.substring(largoTabla*2 - 2, aux.length());
-                    }
-                    else tabla[i][j] = aux.charAt(i*2) + "" + aux.charAt(i*2 + 1);
-                }
-            }
-            j ++;
-        } while (aux != null);
-        for (int i = 1; i < altoTabla; i++) {
-            for (int k = 0; k < largoTabla; k++) {
-                if (tabla[k][i].contains(" ")) tabla[k][i] = QutarBasío(tabla[k][i]);
-            }
-        }
+    private void CrearTablaSintaxis() {
+        try {
+            Workbook libro = jxl.Workbook.getWorkbook(new File("src/txts/tablaSintaxis.txt"));
+            altoTabla = libro.getSheet(0).getColumns();
+            tabla = new String[libro.getSheet(0).getRows()][altoTabla];
+            for (int i = 0; i < tabla.length; i++)
+                for (int j = 0; j < altoTabla; j++)
+                    tabla[i][j] = libro.getSheet(0).getCell(i, j).toString();
+        } catch (BiffException | IOException ex) {}
     }
     
     private void CrearListaProduccion() throws FileNotFoundException, IOException {
@@ -89,12 +71,6 @@ public class Sintaxis {
     
     public String MensajeSintaxis() {
         return AnalizarGramatica();
-    }
-
-    private String QutarBasío(String cadena) {
-        String s = "";
-        for (int i = 0; i < cadena.length(); i++) if (cadena.charAt(i) != ' ') s = s + cadena.charAt(i);
-        return s;
     }
 
     private int BuscarX(String s) {
@@ -142,16 +118,10 @@ public class Sintaxis {
     public String token(String numeroToken) {
         String[][] caracteres = Frame.ExtraerCarctaeresDeArchivo();
         String[][] palabras = Frame.ExtraerPalabraReservada();
-        for (String[] c: caracteres) {
-            if (numeroToken.compareTo(c[1]) == 0) {
-                return c[0];
-            }
-        }
-        for (String[] p: palabras) {
-            if (numeroToken.compareTo(p[1]) == 0) {
-                return p[0];
-            }
-        }
-        return "";//las tiene que encontrar, por lo tanto nunca retorna ""
+        String[][] automatas = Frame.ExtraerPalabraReservada();
+        for (String[] c: caracteres) if (numeroToken.compareTo(c[1]) == 0) return c[0];
+        for (String[] p: palabras) if (numeroToken.compareTo(p[1]) == 0) return p[0];
+        for (String[] a: automatas) if (numeroToken.compareTo(a[1]) == 0) return a[0];
+        return "";//espero que la encuentre
     }
 }

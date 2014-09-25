@@ -24,7 +24,7 @@ public class Semantico extends Arbol{
     private void checarVariablesNoDefinidas(Arbol arb) {
         ArrayList<Variable> vars = arb.getVariables();
         for (int i = 0; i < vars.size(); i++) {
-            if (vars.get(i).esDeclaracion()) {
+            if (!vars.get(i).esDeclaracion()) {
                 boolean seEncuentra = true;
                 for (int j = 0; j < i; j++) {
                     seEncuentra = (
@@ -36,12 +36,12 @@ public class Semantico extends Arbol{
                 if (!seEncuentra) checarNivelSuperior(vars.get(i), arb.getPadre());;
             }
         }
-        for (Arbol a: arb.getHijos()) checarUso(a);
+        for (Arbol a: arb.getHijos()) checarVariablesNoDefinidas(a);
     }
     
     private void checarNivelSuperior(Variable var, Arbol padre) {
         if (padre == null) {
-            errores += "Variable nnunca inicializada, Linea: " + var.getLinea();
+            errores += "Variable \"" + var.getNombreVariable() + "\" nunca inicializada, Linea: " + var.getLinea() + "\n";
             return;
         }
         for (Variable v: padre.getVariables()) {
@@ -131,10 +131,9 @@ public class Semantico extends Arbol{
             boolean seEncuentra = nombresIguales & !v.esDeclaracion();
             boolean esGlobalDeNivel = nombresIguales & v.esDeclaracion();
             if (esGlobalDeNivel) return false;
-            if (!seEncuentra) {
+            if (!seEncuentra)
                 for (Arbol a: arbol.getHijos()) return checarUsoSiguienteNivel(a, nombre);
-            }
-            if (seEncuentra) return true; 
+            if (seEncuentra) return true;
         }
         return false;
     }

@@ -37,6 +37,9 @@ public class Automata {
             case '8':
                 lex.setToken("Cadena");
                 break;
+            case '0':
+                lex.setToken("Real");
+                break;
         }
         return true;
     }

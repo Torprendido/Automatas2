@@ -1,0 +1,5 @@
+0Real
+3Comentario
+4Variable
+5Numero
+8Cadena

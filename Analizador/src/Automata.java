@@ -40,9 +40,9 @@ public class Automata {
                 lex.setToken("Cadena");
                 lex.setId("36");
                 break;
-            case '0':
-                lex.setToken("Real");
-                //lex.setId("33");
+            case '9':
+                lex.setToken("Doble");
+                lex.setId("52");
                 break;
         }
         return true;

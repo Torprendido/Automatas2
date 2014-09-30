@@ -23,7 +23,6 @@ public class Automata {
             }
         }
         //si todo esta vien mandara el numero de token
-        //lex.setId(Integer.parseInt(tabla[tabla.length - 1][estado] + "") + 30 + "");
         switch (tabla[tabla.length - 1][estado]) {
             case '3':
                 lex.setToken("Comentario");
@@ -39,7 +38,7 @@ public class Automata {
                 break;
             case '8':
                 lex.setToken("Cadena");
-                lex.setId("38");
+                lex.setId("36");
                 break;
             case '0':
                 lex.setToken("Real");

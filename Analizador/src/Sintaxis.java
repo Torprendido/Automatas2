@@ -25,12 +25,12 @@ public class Sintaxis {
     
     private void CrearTablaSintaxis() {
         try {
-            Workbook libro = jxl.Workbook.getWorkbook(new File("src/txts/tablaSintaxis.txt"));
-            altoTabla = libro.getSheet(0).getColumns();
-            tabla = new String[libro.getSheet(0).getRows()][altoTabla];
+            Workbook libro = Workbook.getWorkbook(new File("src/txts/tablaSintaxis.xls"));
+            altoTabla = libro.getSheet(0).getRows();
+            tabla = new String[libro.getSheet(0).getColumns()][altoTabla];
             for (int i = 0; i < tabla.length; i++)
                 for (int j = 0; j < altoTabla; j++)
-                    tabla[i][j] = libro.getSheet(0).getCell(i, j).toString();
+                    tabla[i][j] = libro.getSheet(0).getCell(i, j).getContents();
         } catch (BiffException | IOException ex) {}
     }
     
@@ -80,7 +80,7 @@ public class Sintaxis {
     }
 
     private int BuscarY(String s) {
-        System.out.println(s + " t-> pila");
+        System.out.println(s + " -> pila");
         for (int i = 0; i < altoTabla; i++) if (tabla[tabla.length - 1][i].compareTo(s) == 0) return i;
         return altoTabla;
     }
@@ -109,9 +109,8 @@ public class Sintaxis {
 
     private String Esperando(int y) {
         String s = "";
-        for (int i = 0; i < tabla.length - 1; i++) {
+        for (int i = 0; i < tabla.length - 1; i++)
             if (tabla[i][y].compareTo("E") != 0) s = s  + token(tabla[i][0]) + ", ";
-        }
         return s;
     }
     

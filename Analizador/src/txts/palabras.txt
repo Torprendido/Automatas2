@@ -27,4 +27,3 @@
 54arreglo
 55matriz
 57bandera
-56caracter

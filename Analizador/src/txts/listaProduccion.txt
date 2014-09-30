@@ -24,7 +24,7 @@ AsigE>[50][35]
 AsigE>[λ]
 AsigD>[50][35]
 AsigD>[λ]
-AsigS>[50][36]
+AsigS>[50][38]
 AsigS>[λ]
 AsigB>[50]<Bandera>
 AsigB>[λ]

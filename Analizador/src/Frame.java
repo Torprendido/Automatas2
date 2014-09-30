@@ -316,7 +316,7 @@ public class Frame extends javax.swing.JFrame {
             for (String[] a: aux) {
                 String linea = caracteres.readLine();
                 a[0] = linea.substring(25, linea.length());
-                a[1] = linea.substring(0, 2);
+                a[1] = linea.substring(0, 2).replaceAll(" ", "");
                 a[2] = linea.substring(2, 25);
             }
             return aux;

@@ -2,42 +2,39 @@ inicio
 	@programa que calcula areas y perimetros de un cuadrado@
 	entero l<-0\
 	doble a<-0\
-	flotante p<-0\
 	cadena s<-'hola'\
-	caracter c\
 	bandera banderita<-falso\
 	bandera banderita2<-verdadero\
-	arreglo array<-[4]\
-	matriz matrix <-[4][5]\
+	arreglo entero array<-[4]\
+	matriz doble matrix <-[4][5]\
 	imprimir('soy una cadena'~5)\
 	leer(x)\
 	imprimir ('inserte el valor de el lado')\
 	leer (l)\
-	recorrido(x,y,++8,i)Â¿
-		mientras(x>y|y<z)Â¿
-			si(x>8)Â¿
+		mientras(x>y|y<z)¿
+			si(x>8)¿
 				@x es mayor a 8@
-			? sino(x>9)Â¿
+			? sino(x>9)¿
 				imprimir('x es mayor a'~9)\
-			? noÂ¿
+			? no¿
 				imprimir('x no es mayor a 8')\
 			?
 		?
-	?
-	hasÂ¿
+	
+	has¿
 		x<-x/8*9/7-6/8+6-7*5/3\
 		@has lo que quieras jajajaja@
 	? mientras(x><2)\
-	funcion area()Â¿
+	funcion area()¿
 		a<-l*l\
 	?
-	funcion perimetro (entero p) Â¿
+	funcion perimetro (entero p) ¿
 		p<-l*4\
 		x<-8*9-7/6+5/6\
 	?
 	imprimir ('el area del cuadrado es:' ~ a)\
 	imprimir ('el perimetro del cuadrado es: ' ~ p)\
-	interruptor(opcion)Â¿
+	switch(opcion)¿
 		caso 1: 
 			imprimir('soy el caso 1')\
 			cortar\
@@ -52,4 +49,3 @@ inicio
 			cortar\
 	?
 fin
-

@@ -1,7 +1,7 @@
 21inicio
 14fin
 15tamanio
-16acaracter
+16aentero
 17comparar
 18contiene
 19acadena
@@ -16,7 +16,7 @@
 30has
 43sino
 44no
-45interruptor
+45switch
 46caso
 47defecto
 48cortar
@@ -26,4 +26,5 @@
 53cadena
 54arreglo
 55matriz
+56adoble
 57bandera

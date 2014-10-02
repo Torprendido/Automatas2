@@ -25,7 +25,8 @@ public class Arbol {
 
     public void insertartHijo(Arbol hijo) {
         hijo.setPadre(this);
-        hijo.setNivel(nivel ++);
+        int aux = nivel + 1;
+        hijo.setNivel(aux);
         hijos.add(hijo);
     }
     

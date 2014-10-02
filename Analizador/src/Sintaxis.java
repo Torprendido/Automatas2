@@ -58,9 +58,16 @@ public class Sintaxis {
                 if (x == tabla.length) 
                     return ids.get(ids.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
                 if (y == altoTabla) 
-                    return "Esperaba " + pila.get(pila.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
+                    return "Esperaba " +
+                            pila.get(pila.size() - 1) +
+                            " en la linea numero: " +
+                            lineas.get(lineas.size() - 1) +
+                            ", encontro " + token(ids.get(ids.size() - 1)) + "\n";
                 if (tabla[x][y].compareTo("E") == 0) 
-                    return "Esperaba: " + Esperando(y) + " en la linea numero: " + lineas.get(lineas.size() - 1)  + "\n";
+                    return "Esperaba: " + Esperando(y) +
+                            " en la linea numero: " +
+                            lineas.get(lineas.size() - 1) +
+                            ", encontro " + token(ids.get(ids.size() - 1)) + "\n";
                 int numPro = Integer.parseInt(tabla[x][y]);
                 pila.remove(pila.size() - 1);
                 agregarGramtica(pila, producciones.get(numPro - 1).getListas());

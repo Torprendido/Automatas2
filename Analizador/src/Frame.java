@@ -24,6 +24,15 @@ public class Frame extends javax.swing.JFrame {
                         }
                 }
         );
+        areaJSP.getVerticalScrollBar().addAdjustmentListener(
+                new AdjustmentListener() {
+                        @Override
+                        public void adjustmentValueChanged(AdjustmentEvent e) {
+                            lineasJSP.getVerticalScrollBar().setValue(e.getValue());
+                        }
+                }
+        );
+        lineasJSP.getVerticalScrollBar().setEnabled(false);
         analizar.setEnabled(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);

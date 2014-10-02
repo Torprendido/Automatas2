@@ -22,17 +22,14 @@ public class InterfazVariables extends javax.swing.JFrame {
 
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Nombre de la variable", "¿Es una declaracion?", "Tipo", "Linea"
+                "Nombre de la variable", "¿Es una declaracion?", "Tipo", "Linea", "Nivel"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -71,7 +68,8 @@ public class InterfazVariables extends javax.swing.JFrame {
             v.getNombreVariable(),
             v.esDeclaracion() ? "sí" : "no",
             v.getTipoVariable(),
-            v.getLinea()
+            v.getLinea(),
+            v.getNivel()
         });
     }
 

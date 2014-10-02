@@ -28,7 +28,7 @@ public class Semantico extends Arbol{
         ArrayList<Variable> vars = arb.getVariables();
         for (int i = 0; i < vars.size(); i++) {
             if (!vars.get(i).esDeclaracion()) {
-                boolean seEncuentra = true;
+                boolean seEncuentra = false;
                 for (int j = 0; j < i; j++) {
                     seEncuentra = (
                             !vars.get(i).esDeclaracion() & vars.get(j).esDeclaracion() & 
@@ -44,11 +44,12 @@ public class Semantico extends Arbol{
     
     private void checarNivelSuperior(Variable var, Arbol padre) {
         if (padre == null) {
-            errores += "Variable \"" + var.getNombreVariable() + "\" nunca inicializada, Linea: " + var.getLinea() + "\n";
+            errores += "Variable \"" + var.getNombreVariable() + "\" nunca declarada , Linea: " + var.getLinea() + "\n";
             return;
         }
         for (Variable v: padre.getVariables()) {
-            if (var.getNombreVariable().compareTo(v.getNombreVariable()) == 0) return;
+            boolean aux = var.getNombreVariable().compareTo(v.getNombreVariable()) == 0 & v.esDeclaracion();
+            if (aux) return;
         }
         checarNivelSuperior(var, padre.getPadre());
     }
@@ -97,14 +98,13 @@ public class Semantico extends Arbol{
                 String tipo = lexemas.get(i - 1).getId();
                 String linea = lexemas.get(i).getLinea();
                 if (contiene(tipo)) {
-                    Variable var = new Variable(nombre, true, tipo, linea);
+                    Variable var = new Variable(nombre, true, tipo, linea, arb.getNivel());
                     arb.insertarVariables(var);
                     intVar.insertarRegistro(var);
                     
                 } else {
-                    Variable var = new Variable(nombre, false, null, linea);
+                    Variable var = new Variable(nombre, false, null, linea, arb.getNivel());
                     arb.insertarVariables(var);
-                    intVar.insertarRegistro(var);
                 }
             }
         }

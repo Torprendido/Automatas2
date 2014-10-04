@@ -44,7 +44,7 @@ ImprimirS><dob><Con>
 Con>[58]<ImprimirS>
 Con>[λ]
 d_Leer>[26][4][34][10]
-d_Recorrido>[27][4]<expresion>[40]<expresion>[40]<Incremento>[40][34][10][32]<Sentencia>[37]
+d_Recorrido>[27][4]<expresion>[40]<expresion>[40]<Incremento>[40][31][34][10][32]<Sentencia>[37]
 Incremento>[39]<dob>
 Incremento>[38]<dob>
 d_Mientras>[28][4]<comp>[10][32]<Sentencia>[37]

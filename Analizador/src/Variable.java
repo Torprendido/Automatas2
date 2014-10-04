@@ -5,6 +5,7 @@ public class Variable {
     private final String tipoVariable;
     private final String linea;
     private final int nivel;
+    private boolean usada;
 
     public Variable(String nombreVariable, boolean declaracion, String tipoVariable, String linea, int nivel) {
         this.nombreVariable = nombreVariable;
@@ -12,6 +13,7 @@ public class Variable {
         this.tipoVariable = tipoVariable;
         this.linea = linea;
         this.nivel = nivel;
+        usada = true;
     }
 
     public String getNombreVariable() {
@@ -30,11 +32,15 @@ public class Variable {
         return linea;
     }
 
-    public boolean isDeclaracion() {
-        return declaracion;
-    }
-
     public int getNivel() {
         return nivel;
+    }
+
+    public boolean esUsada() {
+        return usada;
+    }
+
+    public void setUsada(boolean usada) {
+        this.usada = usada;
     }
 }

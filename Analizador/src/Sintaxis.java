@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import Modelo.Modelo;
 
 public class Sintaxis {
     
@@ -58,16 +59,16 @@ public class Sintaxis {
                 if (x == tabla.length) 
                     return ids.get(ids.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
                 if (y == altoTabla) 
-                    return "Esperaba " +
-                            pila.get(pila.size() - 1) +
+                    return "Esperaba hip:" +
+                            Modelo.tokenToLexema(pila.get(pila.size() - 1)) +
                             " en la linea numero: " +
                             lineas.get(lineas.size() - 1) +
-                            ", encontro " + token(ids.get(ids.size() - 1)) + "\n";
+                            ", encontro " + Modelo.tokenToLexema(ids.get(ids.size() - 1)) + "\n";
                 if (tabla[x][y].compareTo("E") == 0) 
-                    return "Esperaba: " + Esperando(y) +
+                    return "Esperaba hop: " + Esperando(y) +
                             " en la linea numero: " +
                             lineas.get(lineas.size() - 1) +
-                            ", encontro " + token(ids.get(ids.size() - 1)) + "\n";
+                            ", encontro " + Modelo.tokenToLexema(ids.get(ids.size() - 1)) + "\n";
                 int numPro = Integer.parseInt(tabla[x][y]);
                 pila.remove(pila.size() - 1);
                 agregarGramtica(pila, producciones.get(numPro - 1).getListas());
@@ -117,17 +118,8 @@ public class Sintaxis {
     private String Esperando(int y) {
         String s = "";
         for (int i = 0; i < tabla.length - 1; i++)
-            if (tabla[i][y].compareTo("E") != 0) s = s  + token(tabla[i][0]) + ", ";
+            if (tabla[i][y].compareTo("E") != 0) s = s  + Modelo.tokenToLexema(tabla[i][0]) + ", ";
         return s;
     }
     
-    public String token(String numeroToken) {
-        String[][] caracteres = Frame.ExtraerCarctaeresDeArchivo();
-        String[][] palabras = Frame.ExtraerPalabraReservada();
-        String[][] automatas = Frame.ExtraerPalabraReservada();
-        for (String[] c: caracteres) if (numeroToken.compareTo(c[1]) == 0) return c[0];
-        for (String[] p: palabras) if (numeroToken.compareTo(p[1]) == 0) return p[0];
-        for (String[] a: automatas) if (numeroToken.compareTo(a[1]) == 0) return a[0];
-        return "";//espero que la encuentre
-    }
 }

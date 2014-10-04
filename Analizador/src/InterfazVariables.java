@@ -1,14 +1,12 @@
 
+import Modelo.Modelo;
 import javax.swing.table.DefaultTableModel;
 
 public class InterfazVariables extends javax.swing.JFrame {
 
-    private final DefaultTableModel model;
-
     public InterfazVariables() {
         initComponents();
         this.setLocationRelativeTo(null);
-        model = (DefaultTableModel) tabla.getModel();
     }
 
     @SuppressWarnings("unchecked")
@@ -25,7 +23,7 @@ public class InterfazVariables extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre de la variable", "¿Es una declaracion?", "Tipo", "Linea", "Nivel"
+                "Nombre de la variable", "Tipo", "Linea", "Nivel", "¿Se uso?"
             }
         ) {
             Class[] types = new Class [] {
@@ -44,14 +42,14 @@ public class InterfazVariables extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -64,12 +62,12 @@ public class InterfazVariables extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public void insertarRegistro(Variable v) {
-        model.addRow(new Object[] {
+        ((DefaultTableModel) tabla.getModel()).addRow(new Object[] {
             v.getNombreVariable(),
-            v.esDeclaracion() ? "sí" : "no",
-            v.getTipoVariable(),
+            Modelo.tokenToLexema(v.getTipoVariable()),
             v.getLinea(),
-            v.getNivel()
+            v.getNivel(),
+            v.esUsada() ? "si" : "no"
         });
     }
 

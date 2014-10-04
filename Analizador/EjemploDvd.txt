@@ -11,30 +11,29 @@ inicio
 	leer(x)\
 	imprimir ('inserte el valor de el lado')\
 	leer (l)\
-		mientras(x>y|y<z)¿
-			si(x>8)¿
-				@x es mayor a 8@
-			? sino(x>9)¿
-				imprimir('x es mayor a'~9)\
-			? no¿
-				imprimir('x no es mayor a 8')\
-			?
-		?
 	
-	has¿
+	hasÂ¿
 		x<-x/8*9/7-6/8+6-7*5/3\
 		@has lo que quieras jajajaja@
 	? mientras(x><2)\
-	funcion area()¿
+	funcion area()Â¿
 		a<-l*l\
 	?
-	funcion perimetro (entero p) ¿
+	funcion perimetro (entero p) Â¿
 		p<-l*4\
 		x<-8*9-7/6+5/6\
 	?
+	
+	recorrido (x, x, ++1, i) Â¿
+	?
+
+	si (x < 0) Â¿
+		k<-0\
+	?
+	
 	imprimir ('el area del cuadrado es:' ~ a)\
 	imprimir ('el perimetro del cuadrado es: ' ~ p)\
-	switch(opcion)¿
+	switch(opcion)Â¿
 		caso 1: 
 			imprimir('soy el caso 1')\
 			cortar\
@@ -48,4 +47,5 @@ inicio
 			imprimir('soy un caso perdido')\
 			cortar\
 	?
+	entero noexisto <- 0\
 fin

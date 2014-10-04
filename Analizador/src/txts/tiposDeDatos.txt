@@ -1,9 +1,7 @@
 24funcion
 31entero
 51doble
-52flotante
 53cadena
 54arreglo
 55matriz
 57bandera
-56caracter

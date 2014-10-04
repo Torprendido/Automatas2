@@ -23,15 +23,22 @@ public class InterfazVariables extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre de la variable", "Tipo", "Linea", "Nivel", "¿Se uso?"
+                "Nombre de la variable", "Tipo", "Linea", "Nivel", "¿Se uso?", "Valor"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(tabla);
@@ -67,7 +74,8 @@ public class InterfazVariables extends javax.swing.JFrame {
             Modelo.tokenToLexema(v.getTipoVariable()),
             v.getLinea(),
             v.getNivel(),
-            v.esUsada() ? "si" : "no"
+            v.esUsada() ? "si" : "no",
+            v.getValor()
         });
     }
 

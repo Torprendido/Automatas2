@@ -79,11 +79,11 @@ public class Modelo {
             BufferedReader palabras = new BufferedReader(new FileReader(new File("src/txts/automatas.txt")));
             while (palabras.readLine() != null) n ++;
             String aux[][] = new String[n][2];
-            palabras = new BufferedReader(new FileReader(new File("src/txts/palabras.txt")));
+            palabras = new BufferedReader(new FileReader(new File("src/txts/automatas.txt")));
             for (String[] a : aux) {
                 String linea = palabras.readLine();
-                a[0] = linea.substring(1, linea.length()); //substrae desde el caracter 2
-                a[1] = linea.substring(0, 1);
+                a[0] = linea.substring(2, linea.length()); //substrae desde el caracter 2
+                a[1] = linea.substring(0, 2);
             }
             return aux;
         } catch (IOException ex) {
@@ -112,7 +112,7 @@ public class Modelo {
     public static String tokenToLexema(String numeroToken) {
         String[][] caracteres = ExtraerCarctaeresDeArchivo();
         String[][] palabras = ExtraerPalabraReservada();
-        String[][] automatas = ExtraerPalabraReservada();
+        String[][] automatas = ExtraerAutomatas();
         switch (numeroToken) {
             case "1":
                 return "Operador Aritmetico";

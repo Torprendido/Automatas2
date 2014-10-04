@@ -85,21 +85,70 @@ public class Semantico extends Arbol{
     
     private void llenarArbol(Arbol arb, int indice) {
         for (int i = indice; i < lexemas.size(); i ++) {
-            if (lexemas.get(i).getLexema().compareTo("¿") == 0) {
-                Arbol arbHijo = new Arbol();
-                arb.insertartHijo(arbHijo);
-                llenarArbol(arbHijo, i + 1);
-                return;
-            } else if (lexemas.get(i).getLexema().compareTo("?") == 0) {
-                llenarArbol(arb.getPadre(), i + 1);
-                return;
+            switch (lexemas.get(i).getLexema()) {
+                case "funcion":
+                    String nombre = lexemas.get(i + 1).getLexema();
+                    String tipo = lexemas.get(i).getId();
+                    String linea = lexemas.get(i + 1).getLinea();
+                    arb.insertarVariables(new Variable(nombre, true, tipo, linea, arb.getNivel(), null));
+                    Arbol arbHijoi = new Arbol();
+                    arb.insertartHijo(arbHijoi);
+                    llenarArbol(arbHijoi, i + 2);
+                    return;
+                case "recorrido":
+                case "si":
+                case "has":
+                case "no":
+                case "sino":
+                case "caso":
+                case "defecto":
+                case "switch":
+                    Arbol arbHijo = new Arbol();
+                    arb.insertartHijo(arbHijo);
+                    llenarArbol(arbHijo, i + 1);
+                    return;
+                case "?":
+                case "cortar":
+                    llenarArbol(arb.getPadre(), i + 1);
+                    return;
+                case "mientras":
+                    int j = 0;
+                    do {
+                        j ++;
+                        if (lexemas.get(i + j).getLexema().compareTo("¿") == 0) {
+                            Arbol arbHijof = new Arbol();
+                            arb.insertartHijo(arbHijof);
+                            llenarArbol(arbHijof, i + 1);
+                            return;
+                        }
+                    } while (lexemas.get(i + j).getLexema().compareTo("\\") != 0);
             }
             if (lexemas.get(i).getToken().compareTo("Variable") == 0) {
                 String nombre = lexemas.get(i).getLexema();
                 String tipo = lexemas.get(i - 1).getId();
                 String linea = lexemas.get(i).getLinea();
-                if (contiene(tipo)) arb.insertarVariables(new Variable(nombre, true, tipo, linea, arb.getNivel()));
-                else arb.insertarVariables(new Variable(nombre, false, null, linea, arb.getNivel()));
+                String valor = "";
+                if (lexemas.get(i + 1).getLexema().compareTo("<-") == 0) {
+                    int j = i + 2;
+                    while (lexemas.get(j).getLexema().compareTo("\\") != 0) {
+                        valor += lexemas.get(j).getLexema();
+                        j ++;
+                    }
+                }
+                if (contiene(tipo)) arb.insertarVariables(new Variable(nombre,
+                        true,
+                        tipo,
+                        linea,
+                        arb.getNivel(),
+                        valor
+                ));
+                else arb.insertarVariables(new Variable(nombre,
+                        false,
+                        null,
+                        linea,
+                        arb.getNivel(),
+                        valor
+                ));
             }
         }
     }

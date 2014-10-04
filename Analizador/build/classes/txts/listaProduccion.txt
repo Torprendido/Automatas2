@@ -100,7 +100,10 @@ casin><dob>
 casin>[36]
 Sentencia><llenado>[6]<Sentencia>
 llenado>[5]<ar>[11]<llema>
-llema>[34][50]<expresion>
-llema>[5]<ar>[11][34][50]<expresion>
+llema>[34][50]<expresion2>
+llema>[5]<ar>[11][34][50]<expresion2>
 ar>[35]
 ar>[34]
+expresion2>[36]
+expresion2><Bandera>
+expresion2><expresion>

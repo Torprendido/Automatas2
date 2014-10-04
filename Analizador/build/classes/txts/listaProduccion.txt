@@ -98,3 +98,9 @@ cont>[34]
 cont>[36]
 casin><dob>
 casin>[36]
+Sentencia><llenado>[6]<Sentencia>
+llenado>[5]<ar>[11]<llema>
+llema>[34][50]<expresion>
+llema>[5]<ar>[11][34][50]<expresion>
+ar>[35]
+ar>[34]

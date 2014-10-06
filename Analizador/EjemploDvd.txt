@@ -1,39 +1,29 @@
-﻿inicio
+inicio
 	@programa que calcula areas y perimetros de un cuadrado@
-	entero l<-0\
-	doble a<-0\
-	cadena s<-'hola'\
-	bandera banderita<-falso\
-	bandera banderita2<-verdadero\
-	arreglo entero array<-[4]\
-	matriz doble matrix <-[4][5]\
-	imprimir('soy una cadena'~5)\
-	leer(x)\
+	doble d\
+	entero e\
+	cadena c\
+	bandera b\
+	imprimir('soy una cadena'~c)\
+	leer(c)\
 	imprimir ('inserte el valor de el lado')\
-	leer (l)\
-	
+	leer (c)\
 	has¿
-		x<-x/8*9/7-6/8+6-7*5/3\
+		d <- d/8*9/e-6/8+6-7*5/3\
 		@has lo que quieras jajajaja@
-	? mientras(x><2)\
-	funcion area()¿
-		a<-l*l\
-	?
-	funcion perimetro (entero p) ¿
-		p<-l*4\
-		x<-8*9-7/6+5/6\
-	?
-	
-	recorrido (x, x, ++1, entero i) ¿
+	? mientras(5 -  e><2 | d/6 < 0 & e = d)\
+
+	recorrido (e, e + 10, ++1, entero i) ¿
+		d <- i\
 	?
 
-	si (x < 0) ¿
-		k<-0\
+	si (d < 0) ¿
+		e<-0\
 	?
 	
-	imprimir ('el area del cuadrado es:' ~ a)\
-	imprimir ('el perimetro del cuadrado es: ' ~ p)\
-	switch(opcion)¿
+	imprimir ('el area del cuadrado es:' ~ e)\
+	imprimir ('el perimetro del cuadrado es: ' ~ c ~ 'ok' ~ b)\	
+	switch(e)¿
 		caso 1: 
 			imprimir('soy el caso 1')\
 			cortar\
@@ -47,8 +37,4 @@
 			imprimir('soy un caso perdido')\
 			cortar\
 	?
-	entero noexisto <- 0\
-	[s]x <-s*8\
-	[x][y] c<- y*8/9-7+y\
-	@ya esta el llenado de arreglos y matrices@
 fin

@@ -35,9 +35,12 @@ public class Semantico extends Arbol{
                             !vars.get(i).esDeclaracion() & vars.get(j).esDeclaracion() & 
                             vars.get(i).getNombreVariable().compareTo(vars.get(j).getNombreVariable()) == 0
                     );
-                    if (seEncuentra) break;
+                    if (seEncuentra) {
+                        vars.get(i).getLexemaObj().setLexema(vars.get(j).getTipoVariable());
+                        break;
+                    }
                 }
-                if (!seEncuentra) checarNivelSuperior(vars.get(i), arb.getPadre());;
+                if (!seEncuentra) checarNivelSuperior(vars.get(i), arb.getPadre());
             }
         }
         for (Arbol a: arb.getHijos()) checarVariablesNoDefinidas(a);
@@ -50,7 +53,10 @@ public class Semantico extends Arbol{
         }
         for (Variable v: padre.getVariables()) {
             boolean aux = var.getNombreVariable().compareTo(v.getNombreVariable()) == 0 & v.esDeclaracion();
-            if (aux) return;
+            if (aux) {
+                var.getLexemaObj().setLexema(v.getTipoVariable());
+                return;
+            }
         }
         checarNivelSuperior(var, padre.getPadre());
     }
@@ -90,7 +96,10 @@ public class Semantico extends Arbol{
                     String nombre = lexemas.get(i + 1).getLexema();
                     String tipo = lexemas.get(i).getId();
                     String linea = lexemas.get(i + 1).getLinea();
-                    arb.insertarVariables(new Variable(nombre, true, tipo, linea, arb.getNivel(), null));
+                    Variable var = new Variable(nombre, true, Modelo.tokenToLexema(tipo), linea, arb.getNivel(), null);
+                    var.setLexemaObj(lexemas.get(i + 1));
+                    arb.insertarVariables(var);
+                    lexemas.get(i + 1).setLexema(Modelo.tokenToLexema(tipo));
                     Arbol arbHijoi = new Arbol();
                     arb.insertartHijo(arbHijoi);
                     llenarArbol(arbHijoi, i + 2);
@@ -135,21 +144,36 @@ public class Semantico extends Arbol{
                         j ++;
                     }
                 }
-                if (contiene(tipo)) arb.insertarVariables(new Variable(nombre,
+                if (contiene(tipo)) {
+                    Variable var = new Variable(
+                        nombre,
                         true,
-                        tipo,
+                        Modelo.tokenToLexema(tipo),
                         linea,
                         arb.getNivel(),
                         valor
-                ));
-                else arb.insertarVariables(new Variable(nombre,
+                    );
+                    var.setLexemaObj(lexemas.get(i));
+                    arb.insertarVariables(var);
+                    lexemas.get(i).setLexema(Modelo.tokenToLexema(tipo));
+                }
+                else {
+                    Variable var = new Variable(
+                        nombre,
                         false,
                         null,
                         linea,
                         arb.getNivel(),
                         valor
-                ));
+                    );
+                    var.setLexemaObj(lexemas.get(i));
+                    arb.insertarVariables(var);
+                }
             }
+            if (lexemas.get(i).getToken().compareTo("Numero") == 0 |
+                    lexemas.get(i).getToken().compareTo("Doble") == 0 |
+                    lexemas.get(i).getToken().compareTo("Cadena") == 0)
+                lexemas.get(i).setLexema(lexemas.get(i).getToken());
         }
     }
     
@@ -165,16 +189,18 @@ public class Semantico extends Arbol{
                     );
                     if (seEncuentra) break;
                 }
-                for (Arbol a: arb.getHijos()) {
-                    seEncuentra = checarUsoSiguienteNivel(a, vars.get(i).getNombreVariable());
-                    if (seEncuentra) break;
-                }
                 if (!seEncuentra) {
-                    vars.get(i).setUsada(false);
-                    errores += "Varable \"" +
-                            vars.get(i).getNombreVariable() +
-                            "\" no usada. Linea: " +
-                            vars.get(i).getLinea() + "\n";
+                    for (Arbol a: arb.getHijos()) {
+                        seEncuentra = checarUsoSiguienteNivel(a, vars.get(i).getNombreVariable());
+                        if (seEncuentra) break;
+                    }
+                    if (!seEncuentra) {
+                        vars.get(i).setUsada(false);
+                        errores += "Varable \"" +
+                                vars.get(i).getNombreVariable() +
+                                "\" no usada. Linea: " +
+                                vars.get(i).getLinea() + "\n";
+                    }
                 }
                 intVar.insertarRegistro(vars.get(i));
             }

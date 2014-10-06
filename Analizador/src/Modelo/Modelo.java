@@ -8,6 +8,8 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 public class Modelo {
     
@@ -125,5 +127,23 @@ public class Modelo {
         for (String[] p: palabras) if (numeroToken.compareTo(p[1]) == 0) return p[0];
         for (String[] a: automatas) if (numeroToken.compareTo(a[1]) == 0) return a[0];
         return "";//espero que la encuentre
+    }
+    
+    public static String producto(String archivo, String factorA, String factorB) {
+        System.out.println(archivo + ", " + factorA + ", " + factorB);
+        try {
+            Workbook libro = Workbook.getWorkbook(new File("src/txts/" + archivo));
+            int altoTabla = libro.getSheet(0).getRows();
+            String[][] tabla = new String[libro.getSheet(0).getColumns()][altoTabla];
+            for (int i = 0; i < tabla.length; i++)
+                for (int j = 0; j < altoTabla; j++)
+                    tabla[i][j] = libro.getSheet(0).getCell(i, j).getContents();
+            int x = 0, y = 0;
+            for (int i = 0; i < tabla.length; i++) if (tabla[i][0].compareTo(factorA) == 0) x = i;
+            for (int j = 0; j < altoTabla; j++) if (tabla[0][j].compareTo(factorB) == 0) y = j;
+            return tabla[x][y];
+        } catch (BiffException | IOException ex) {
+            return "";
+        }
     }
 }

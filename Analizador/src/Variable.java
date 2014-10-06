@@ -6,7 +6,8 @@ public class Variable {
     private final String linea;
     private final int nivel;
     private boolean usada;
-    private String valor;
+    private final String valor;
+    private Lexema lexemaObj;
 
     public Variable(String nombreVariable, boolean declaracion, String tipoVariable, String linea, int nivel, String valor) {
         this.nombreVariable = nombreVariable;
@@ -16,6 +17,14 @@ public class Variable {
         this.nivel = nivel;
         usada = true;
         this.valor = valor;
+    }
+    
+    public void setLexemaObj(Lexema lexemaObj) {
+        this.lexemaObj = lexemaObj;
+    }
+    
+    public Lexema getLexemaObj() {
+        return lexemaObj;
     }
 
     public String getValor() {

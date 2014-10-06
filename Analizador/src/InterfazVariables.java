@@ -71,7 +71,7 @@ public class InterfazVariables extends javax.swing.JFrame {
     public void insertarRegistro(Variable v) {
         ((DefaultTableModel) tabla.getModel()).addRow(new Object[] {
             v.getNombreVariable(),
-            Modelo.tokenToLexema(v.getTipoVariable()),
+            v.getTipoVariable(),
             v.getLinea(),
             v.getNivel(),
             v.esUsada() ? "si" : "no",

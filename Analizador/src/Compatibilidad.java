@@ -1,0 +1,194 @@
+
+import java.util.ArrayList;
+import Modelo.Modelo;
+
+public class Compatibilidad {
+    
+    private String errores;
+    private final ArrayList<ArrayList<Lexema>> operaciones;
+    
+    public Compatibilidad() {
+        errores = "";
+        operaciones = new ArrayList();
+    }
+    
+    public String MensajeCompativilidad(ArrayList<Lexema> lexemas){
+        toListOperaciones(lexemas);
+        checarCompatibilidad(operaciones);
+        return errores;
+    }
+    
+    public void checarCompatibilidad(ArrayList<ArrayList<Lexema>> operaciones) {
+        for (ArrayList<Lexema> operacion: operaciones) {
+            ArrayList<String> posOrden = posOrden(operacion);
+            if (!reduccion(posOrden, 0)) errores += "Tipo de datos no compatibles. Linea: " + operacion.get(0).getLinea() + "\n";
+        }
+    }
+    
+    private boolean reduccion(ArrayList<String> posOrden, int indice) {
+        System.out.println(posOrden + ", " + indice);
+        if (posOrden.size() == 1) return true;
+        switch (posOrden.get(indice)) {
+            case "+":
+            case "-":
+            case "*":
+                return remplaza("masMenosPor.xls", posOrden, indice);
+            case "/":
+                return remplaza("entre.xls", posOrden, indice);
+            case "~":
+                return remplaza("concatenar.xls", posOrden, indice);
+            case ">":
+            case "<":
+            case "><":
+            case ">=":
+            case "<=":
+                return remplaza("mayorMenorDiferente(etc).xls", posOrden, indice);
+            case "|":
+            case "&":
+                return remplaza("orAnd.xls", posOrden, indice);
+            case "<-":
+                return remplaza("asignacion.xls", posOrden, indice);
+            default:
+                return reduccion(posOrden, ++indice);
+        }
+    }
+    
+    private boolean remplaza(String archivo, ArrayList<String> posOrden, int indice) {
+        String producto = Modelo.producto(archivo, posOrden.get(indice - 2), posOrden.get(indice - 1));
+        if (producto.compareTo("E") == 0) return false;
+        posOrden.set(indice - 2, producto);
+        posOrden.remove(indice - 1);
+        posOrden.remove(indice - 1);
+        return reduccion(posOrden, 0);
+    }
+    
+    private void toListOperaciones(ArrayList<Lexema> codigo) {
+        ArrayList<Lexema> operacion = new ArrayList();
+        boolean entran = false;
+        int i = 0;
+        for (Lexema l: codigo) {
+            switch (l.getLexema()) {
+                case "<-":
+                    operacion = new ArrayList();
+                    operacion.add(codigo.get(codigo.indexOf(l) - 1));
+                    operacion.add(l);
+                    entran = true;
+                    break;
+                case "recorrido":
+                    i = 0;
+                case "si":
+                case "mientras":
+                    operacion = new ArrayList();
+                    entran = true;
+                    break;
+                case ",":
+                    i ++;
+                    if (entran) {
+                        Lexema lex = new Lexema();
+                        lex.setLexema(")");
+                        operacion.add(lex);
+                        operaciones.add(operacion);
+                        operacion = new ArrayList();
+                        lex = new Lexema();
+                        lex.setLexema("(");
+                        if (i != 2) operacion.add(lex);
+                    }
+                    if (i == 2) entran = false;
+                    break;
+                case "\\":
+                case "¿":
+                    if (entran) {
+                        operaciones.add(operacion);
+                        entran = false;
+                    }
+                    break;
+                default:
+                    if (entran) operacion.add(l);
+                    break;
+            }
+        }
+    }
+    
+    private ArrayList<String> posOrden(ArrayList<Lexema> operacionLexema) {
+        ArrayList<String> operacion = new ArrayList();
+        for (Lexema l: operacionLexema) operacion.add(l.getLexema());
+        String cabeza = "";
+        ArrayList<String> operandos = new ArrayList();
+        ArrayList<String> operadores = new ArrayList();
+        for (String token: operacion) {
+            if (!operadores.isEmpty()) cabeza = operadores.get(operadores.size() - 1);
+            switch (token) {
+                case "<-":
+                    operadores.add(token);
+                    break;
+                case "+":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() -1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "-":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("+") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "/":
+                    if (cabeza.compareTo("*") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "*":
+                    if (cabeza.compareTo("/") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case ">":
+                case "<":
+                case "><":
+                case "<=":
+                case ">=":
+                case "=":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0 |
+                            cabeza.compareTo("+") == 0 | cabeza.compareTo("<") == 0 |
+                            cabeza.compareTo(">") == 0 | cabeza.compareTo("><") == 0 |
+                            cabeza.compareTo("><") == 0 | cabeza.compareTo("<=") == 0 |
+                            cabeza.compareTo(">=") == 0 | cabeza.compareTo("=") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "(":
+                    operadores.add(token);
+                    break;
+                case ")":
+                    if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
+                    while (cabeza.compareTo("(") != 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() -1);
+                        cabeza = operadores.get(operadores.size() -1);
+                        if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
+                    }
+                    break;
+                default:
+                    operandos.add(token);
+                    break;
+            }
+        }
+        while (!operadores.isEmpty()) {
+            operandos.add(operadores.get(operadores.size() - 1));
+            operadores.remove(operadores.size() - 1);
+        }
+        return operandos;
+    }
+}

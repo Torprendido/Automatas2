@@ -29,9 +29,9 @@ AsigB>[50]<Bandera>
 AsigB>[λ]
 Bandera>[22]
 Bandera>[23]
-AsigA>[50][5]<nn>[11]
+AsigA>[50][5]<ar>[11]
 AsigA>[λ]
-AsigM>[50][5]<nn>[11][5]<nn>[11]
+AsigM>[50][5]<ar>[11][5]<ar>[11]
 AsigM>[λ]
 var>[λ]
 var>[40]<d_Variables><var>
@@ -55,9 +55,9 @@ neg>[20]
 neg>[λ]
 comp2>[2]<comp>
 comp2>[λ]
-compi><expresion>[3]<expresion>
+compi><expresion><compi2>
 expresion><dob><d_op2>
-expresion>[34]<d_op2>
+expresion><corchetes>[34]<d_op2>
 d_Si>[29][4]<comp>[10][32]<Sentencia>[37]<Sino><no>
 Sino>[43][4]<comp>[10][32]<Sentencia>[37]
 Sino>[λ]
@@ -107,3 +107,9 @@ ar>[34]
 expresion2>[36]
 expresion2><Bandera>
 expresion2><expresion>
+compi2>[3]<expresion>
+compi2>[λ]
+corchetes>[5]<ar>[11]<corchetes1>
+corchetes>[λ]
+corchetes1>[5]<ar>[11]
+corchetes1>[λ]

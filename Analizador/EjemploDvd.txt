@@ -8,13 +8,18 @@ inicio
 	leer(c)\
 	imprimir ('inserte el valor de el lado')\
 	leer (c)\
+	arreglo entero x <- [2]\
 	has¿
-		d <- d/8*9/e-6/8+6-7*5/3\
+		d <- d/8*9/e-6/8+6-7*5/3 + [2]x\
 		@has lo que quieras jajajaja@
-	? mientras(5 -  e><2 | d/6 < 0 & e = d)\
+	? mientras(5 -  e><2 | d/6 < 0 & e = d | b)\
 
 	recorrido (e, e + 10, ++1, entero i) ¿
 		d <- i\
+		si (e < 2) ¿
+			mientras(e > 2) ¿
+			?
+		?
 	?
 
 	si (d < 0) ¿
@@ -22,7 +27,7 @@ inicio
 	?
 	
 	imprimir ('el area del cuadrado es:' ~ e)\
-	imprimir ('el perimetro del cuadrado es: ' ~ c ~ 'ok' ~ b)\	
+	imprimir ('el perimetro del cuadrado es: ' ~ c ~ 'ok' ~ e)\	
 	switch(e)¿
 		caso 1: 
 			imprimir('soy el caso 1')\
@@ -38,3 +43,4 @@ inicio
 			cortar\
 	?
 fin
+

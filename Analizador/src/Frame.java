@@ -178,8 +178,10 @@ public class Frame extends javax.swing.JFrame {
             lineas.add(lexemas.get(j).getLinea());
         }
         String errores = new Sintaxis(ids, lineas).MensajeSintaxis();
-        errores += errores.compareTo("") == 0 ? new Semantico(lexemas).MensajeSemantico() : "";
-        errores += errores.compareTo("") == 0 ? new Compatibilidad().MensajeCompativilidad(lexemas) : "";
+        errores += new Semantico(lexemas).MensajeSemantico();
+        errores += new Compatibilidad().MensajeCompativilidad(lexemas);
+        //errores += errores.compareTo("") == 0 ? new Semantico(lexemas).MensajeSemantico() : "";
+        //errores += errores.compareTo("") == 0 ? new Compatibilidad().MensajeCompativilidad(lexemas) : "";
         mensaje.setText(errores);
         compilar.setEnabled(false);
     }//GEN-LAST:event_compilarActionPerformed

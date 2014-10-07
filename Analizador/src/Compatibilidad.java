@@ -26,7 +26,6 @@ public class Compatibilidad {
     }
     
     private boolean reduccion(ArrayList<String> posOrden, int indice) {
-        System.out.println(posOrden + ", " + indice);
         if (posOrden.size() == 1) return true;
         switch (posOrden.get(indice)) {
             case "+":
@@ -42,6 +41,7 @@ public class Compatibilidad {
             case "><":
             case ">=":
             case "<=":
+            case "=":
                 return remplaza("mayorMenorDiferente(etc).xls", posOrden, indice);
             case "|":
             case "&":
@@ -65,19 +65,45 @@ public class Compatibilidad {
     private void toListOperaciones(ArrayList<Lexema> codigo) {
         ArrayList<Lexema> operacion = new ArrayList();
         boolean entran = false;
+        boolean esArray = false;
+        boolean corchete = false;
         int i = 0;
         for (Lexema l: codigo) {
             switch (l.getLexema()) {
-                case "<-":
+                case "[":
+                    corchete = true;
+                    int aux = codigo.indexOf(l);
+                    String aux2 = codigo.get(aux + 1).getLexema();
+                    if (aux2.compareTo("Numero") != 0 & aux2.compareTo("entero") != 0)
+                        errores += "Tipo de tado no compatible. Linea: " + l.getLinea() + "\n";
+                    break;
+                case "arreglo":
+                case "matriz":
+                    esArray = true;
+                    break;
+                case "leer":
                     operacion = new ArrayList();
-                    operacion.add(codigo.get(codigo.indexOf(l) - 1));
-                    operacion.add(l);
+                    Lexema le = new Lexema();
+                    le.setLexema("cadena");le.setLinea(l.getLinea());
+                    operacion.add(le);
+                    le = new Lexema();
+                    le.setLexema("<-");le.setLinea(l.getLinea());
+                    operacion.add(le);
                     entran = true;
+                    break;
+                case "<-":
+                    if (!esArray) {
+                        operacion = new ArrayList();
+                        operacion.add(codigo.get(codigo.indexOf(l) - 1));
+                        operacion.add(l);
+                        entran = true;
+                    }
                     break;
                 case "recorrido":
                     i = 0;
                 case "si":
                 case "mientras":
+                case "imprimir":
                     operacion = new ArrayList();
                     entran = true;
                     break;
@@ -96,14 +122,19 @@ public class Compatibilidad {
                     if (i == 2) entran = false;
                     break;
                 case "\\":
+                    esArray = false;
                 case "¿":
                     if (entran) {
                         operaciones.add(operacion);
                         entran = false;
                     }
+                    
+                    break;
+                case "]":
+                    corchete = false;
                     break;
                 default:
-                    if (entran) operacion.add(l);
+                    if (entran & !corchete) operacion.add(l);
                     break;
             }
         }
@@ -119,6 +150,7 @@ public class Compatibilidad {
             if (!operadores.isEmpty()) cabeza = operadores.get(operadores.size() - 1);
             switch (token) {
                 case "<-":
+                case "~":
                     operadores.add(token);
                     break;
                 case "+":
@@ -179,6 +211,22 @@ public class Compatibilidad {
                         cabeza = operadores.get(operadores.size() -1);
                         if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
                     }
+                    break;
+                case "&":
+                case "|":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0 |
+                            cabeza.compareTo("&") == 0 | cabeza.compareTo("|") == 0 |
+                            cabeza.compareTo("+") == 0 | cabeza.compareTo("<") == 0 |
+                            cabeza.compareTo(">") == 0 | cabeza.compareTo("><") == 0 |
+                            cabeza.compareTo("><") == 0 | cabeza.compareTo("<=") == 0 |
+                            cabeza.compareTo(">=") == 0 | cabeza.compareTo("=") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "!":
                     break;
                 default:
                     operandos.add(token);

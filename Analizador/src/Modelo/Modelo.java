@@ -130,7 +130,6 @@ public class Modelo {
     }
     
     public static String producto(String archivo, String factorA, String factorB) {
-        System.out.println(archivo + ", " + factorA + ", " + factorB);
         try {
             Workbook libro = Workbook.getWorkbook(new File("src/txts/" + archivo));
             int altoTabla = libro.getSheet(0).getRows();

@@ -1,8 +1,16 @@
 public class Lexema {
     
-    private String lexema = "", id = "", token = "", linea = "";   
+    private String lexema = "", id = "", token = "", linea = "", lexemaTipo = "";
     
     public Lexema() {}
+
+    public String getLexemaTipo() {
+        return lexemaTipo;
+    }
+
+    public void setLexemaTipo(String lexemaTipo) {
+        this.lexemaTipo = lexemaTipo;
+    }
 
     public String getLinea() {
         return linea;
@@ -17,6 +25,7 @@ public class Lexema {
     }
 
     public void setLexema(String lexema) {
+        setLexemaTipo(lexema);
         this.lexema = lexema;
     }
 

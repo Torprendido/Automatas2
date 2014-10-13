@@ -8,6 +8,7 @@ public class Semantico extends Arbol{
     private final Arbol arb;
     private String errores;
     private final InterfazVariables intVar;
+    private final ArrayList<String> lineas = new ArrayList();
     
     public Semantico(ArrayList<Lexema> lexemas) {
         intVar = new InterfazVariables();
@@ -25,6 +26,10 @@ public class Semantico extends Arbol{
         return errores;
     }
     
+    public ArrayList<String> getLineasdeError(){
+        return lineas;
+    }
+    
     private void checarVariablesNoDefinidas(Arbol arb) {
         ArrayList<Variable> vars = arb.getVariables();
         for (int i = 0; i < vars.size(); i++) {
@@ -36,7 +41,7 @@ public class Semantico extends Arbol{
                             vars.get(i).getNombreVariable().compareTo(vars.get(j).getNombreVariable()) == 0
                     );
                     if (seEncuentra) {
-                        vars.get(i).getLexemaObj().setLexema(vars.get(j).getTipoVariable());
+                        vars.get(i).getLexemaObj().setLexemaTipo(vars.get(j).getTipoVariable());
                         break;
                     }
                 }
@@ -49,12 +54,13 @@ public class Semantico extends Arbol{
     private void checarNivelSuperior(Variable var, Arbol padre) {
         if (padre == null) {
             errores += "Variable \"" + var.getNombreVariable() + "\" nunca declarada , Linea: " + var.getLinea() + "\n";
+            lineas.add(var.getLinea());
             return;
         }
         for (Variable v: padre.getVariables()) {
             boolean aux = var.getNombreVariable().compareTo(v.getNombreVariable()) == 0 & v.esDeclaracion();
             if (aux) {
-                var.getLexemaObj().setLexema(v.getTipoVariable());
+                var.getLexemaObj().setLexemaTipo(v.getTipoVariable());
                 return;
             }
         }
@@ -77,6 +83,7 @@ public class Semantico extends Arbol{
                             vars.get(i).getLinea() +
                             ") repetida en la linea: " +
                             vars.get(j).getLinea() + "\n";
+                    lineas.add(vars.get(j).getLinea());
                     break;
                 }
             }
@@ -99,7 +106,7 @@ public class Semantico extends Arbol{
                     Variable var = new Variable(nombre, true, Modelo.tokenToLexema(tipo), linea, arb.getNivel(), null);
                     var.setLexemaObj(lexemas.get(i + 1));
                     arb.insertarVariables(var);
-                    lexemas.get(i + 1).setLexema(Modelo.tokenToLexema(tipo));
+                    lexemas.get(i + 1).setLexemaTipo(Modelo.tokenToLexema(tipo));
                     Arbol arbHijoi = new Arbol();
                     arb.insertartHijo(arbHijoi);
                     llenarArbol(arbHijoi, i + 2);
@@ -155,7 +162,7 @@ public class Semantico extends Arbol{
                     );
                     var.setLexemaObj(lexemas.get(i));
                     arb.insertarVariables(var);
-                    lexemas.get(i).setLexema(Modelo.tokenToLexema(tipo));
+                    lexemas.get(i).setLexemaTipo(Modelo.tokenToLexema(tipo));
                 }
                 else {
                     Variable var = new Variable(
@@ -173,7 +180,7 @@ public class Semantico extends Arbol{
             if (lexemas.get(i).getToken().compareTo("Numero") == 0 |
                     lexemas.get(i).getToken().compareTo("Doble") == 0 |
                     lexemas.get(i).getToken().compareTo("Cadena") == 0)
-                lexemas.get(i).setLexema(lexemas.get(i).getToken());
+                lexemas.get(i).setLexemaTipo(lexemas.get(i).getToken());
         }
     }
     
@@ -200,6 +207,7 @@ public class Semantico extends Arbol{
                                 vars.get(i).getNombreVariable() +
                                 "\" no usada. Linea: " +
                                 vars.get(i).getLinea() + "\n";
+                        lineas.add(vars.get(i).getLinea());
                     }
                 }
                 intVar.insertarRegistro(vars.get(i));

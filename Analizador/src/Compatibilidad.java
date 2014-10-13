@@ -6,10 +6,15 @@ public class Compatibilidad {
     
     private String errores;
     private final ArrayList<ArrayList<Lexema>> operaciones;
+    private ArrayList<String> lineas;
     
     public Compatibilidad() {
         errores = "";
         operaciones = new ArrayList();
+    }
+    
+    public void setLineasError(ArrayList<String> lineas) {
+        this.lineas = lineas;
     }
     
     public String MensajeCompativilidad(ArrayList<Lexema> lexemas){
@@ -21,7 +26,8 @@ public class Compatibilidad {
     public void checarCompatibilidad(ArrayList<ArrayList<Lexema>> operaciones) {
         for (ArrayList<Lexema> operacion: operaciones) {
             ArrayList<String> posOrden = posOrden(operacion);
-            if (!reduccion(posOrden, 0)) errores += "Tipo de datos no compatibles. Linea: " + operacion.get(0).getLinea() + "\n";
+            if (!reduccion(posOrden, 0)) 
+                errores += "Tipo de datos no compatibles. Linea: " + operacion.get(0).getLinea() + "\n";
         }
     }
     
@@ -69,11 +75,11 @@ public class Compatibilidad {
         boolean corchete = false;
         int i = 0;
         for (Lexema l: codigo) {
-            switch (l.getLexema()) {
+            if (!lineas.contains(l.getLinea())) switch (l.getLexemaTipo()) {
                 case "[":
                     corchete = true;
                     int aux = codigo.indexOf(l);
-                    String aux2 = codigo.get(aux + 1).getLexema();
+                    String aux2 = codigo.get(aux + 1).getLexemaTipo();
                     if (aux2.compareTo("Numero") != 0 & aux2.compareTo("entero") != 0)
                         errores += "Tipo de tado no compatible. Linea: " + l.getLinea() + "\n";
                     break;
@@ -84,10 +90,10 @@ public class Compatibilidad {
                 case "leer":
                     operacion = new ArrayList();
                     Lexema le = new Lexema();
-                    le.setLexema("cadena");le.setLinea(l.getLinea());
+                    le.setLexemaTipo("cadena");le.setLinea(l.getLinea());
                     operacion.add(le);
                     le = new Lexema();
-                    le.setLexema("<-");le.setLinea(l.getLinea());
+                    le.setLexemaTipo("<-");le.setLinea(l.getLinea());
                     operacion.add(le);
                     entran = true;
                     break;
@@ -111,12 +117,12 @@ public class Compatibilidad {
                     i ++;
                     if (entran) {
                         Lexema lex = new Lexema();
-                        lex.setLexema(")");
+                        lex.setLexemaTipo(")");
                         operacion.add(lex);
                         operaciones.add(operacion);
                         operacion = new ArrayList();
                         lex = new Lexema();
-                        lex.setLexema("(");
+                        lex.setLexemaTipo("(");
                         if (i != 2) operacion.add(lex);
                     }
                     if (i == 2) entran = false;
@@ -142,7 +148,7 @@ public class Compatibilidad {
     
     private ArrayList<String> posOrden(ArrayList<Lexema> operacionLexema) {
         ArrayList<String> operacion = new ArrayList();
-        for (Lexema l: operacionLexema) operacion.add(l.getLexema());
+        for (Lexema l: operacionLexema) operacion.add(l.getLexemaTipo());
         String cabeza = "";
         ArrayList<String> operandos = new ArrayList();
         ArrayList<String> operadores = new ArrayList();

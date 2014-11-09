@@ -11,13 +11,23 @@ import Modelo.Modelo;
 public class Sintaxis {
     
     private final ArrayList<String> ids;
+    private final ArrayList<String> lineas;
+    private final ArrayList<String> nombres;
     private static String[][] tabla; static int altoTabla = 0;
     private final ArrayList<Produccion> producciones = new ArrayList();
-    private final ArrayList<String> lineas;
     
-    public Sintaxis(ArrayList<String> ids, ArrayList<String> lineas) {
-        this.ids = ids;
-        this.lineas = lineas;
+    public Sintaxis(ArrayList<Lexema> lexemas) {
+        ids = new ArrayList();
+        lineas = new ArrayList();
+        nombres = new ArrayList();
+        ids.add("$");
+        nombres.add("");
+        lineas.add("");
+        for (int j = lexemas.size() - 1; j >= 0; j --) {
+            ids.add(lexemas.get(j).getId());
+            lineas.add(lexemas.get(j).getLinea());
+            nombres.add(lexemas.get(j).getLexema());
+        }
         CrearTablaSintaxis();
         try {
             CrearListaProduccion();
@@ -50,30 +60,67 @@ public class Sintaxis {
         pila.add("$");
         pila.add(tabla[tabla.length - 1][1]);
         int x, y;
+        Intermedio inter = new Intermedio();
+        ArrayList<String> expresion = new ArrayList();
+        int cuentaParentesis = 0;
+        boolean entraif = false;
+        boolean entrafor = false;
         while (!ids.isEmpty()) {
-            if (comapararTopes(ids, pila)) cotarCabezas(ids, pila);
-            else if (checarλ(pila)) pila.remove(pila.size() - 1);
+            if (comapararTopes(ids, pila)) {
+                if (entraif | entrafor) {
+                    String aux = nombres.get(ids.size() - 1);
+                    if (!aux.contains(",")) expresion.add(aux);
+                    if (aux.compareTo("(") == 0) cuentaParentesis ++;
+                    else if (aux.compareTo(")") == 0) cuentaParentesis --;
+                    else if (aux.compareTo(",") == 0) cuentaParentesis --;
+                    if (cuentaParentesis == 0) {
+                        if (entraif) {
+                            inter.setNumeroProduccion(0, expresion);
+                            entraif = false;
+                        } //else if (entrafor) {
+//                            inter.setNumeroProduccion(200, expresion);
+//                            entrafor = false;
+//                        }
+                        expresion = new ArrayList();
+                    }
+                }
+                cotarCabezas(ids, pila);
+            } else if (checarλ(pila)) pila.remove(pila.size() - 1);
             else {
                 x = BuscarX(ids.get(ids.size() - 1));
                 y = BuscarY(pila.get(pila.size() - 1));
                 if (x == tabla.length) 
                     return ids.get(ids.size() - 1) + " en la linea numero: " + lineas.get(lineas.size() - 1) + "\n";
                 if (y == altoTabla) 
-                    return "Esperaba hip:" +
+                    return "Esperaba:" +
                             Modelo.tokenToLexema(pila.get(pila.size() - 1)) +
                             " en la linea numero: " +
                             lineas.get(lineas.size() - 1) +
                             ", encontro " + Modelo.tokenToLexema(ids.get(ids.size() - 1)) + "\n";
                 if (tabla[x][y].compareTo("E") == 0) 
-                    return "Esperaba hop: " + Esperando(y) +
+                    return "Esperaba: " + Esperando(y) +
                             " en la linea numero: " +
                             lineas.get(lineas.size() - 1) +
                             ", encontro " + Modelo.tokenToLexema(ids.get(ids.size() - 1)) + "\n";
                 int numPro = Integer.parseInt(tabla[x][y]);
                 pila.remove(pila.size() - 1);
                 agregarGramtica(pila, producciones.get(numPro - 1).getListas());
+                if (numPro == 51) {
+                    if (!entraif) {
+                        expresion.add("(");
+                        cuentaParentesis ++;
+                        entraif = true;
+                    }
+                } else if (numPro == 59 | numPro == 60) {
+//                    if (!entrafor) {
+//                        cuentaParentesis ++;
+//                        entraif = true;
+//                    }
+                }
+                inter.setNumeroProduccion(numPro, expresion);
             }
         }
+        System.out.println(inter.codigoIntermedio);
         return "";
     }
     
@@ -82,13 +129,13 @@ public class Sintaxis {
     }
 
     private int BuscarX(String s) {
-        System.out.print(s + " -> codigo ");
+        //System.out.print(s + " -> codigo ");
         for (int i = 0; i < tabla.length; i++) if (tabla[i][0].compareTo(s) == 0) return i;
         return tabla.length;
     }
 
     private int BuscarY(String s) {
-        System.out.println(s + " -> pila");
+        //System.out.println(s + " -> pila");
         for (int i = 0; i < altoTabla; i++) if (tabla[tabla.length - 1][i].compareTo(s) == 0) return i;
         return altoTabla;
     }
@@ -98,8 +145,8 @@ public class Sintaxis {
     }
 
     private void cotarCabezas(ArrayList<String> ids, ArrayList<String> pila) {
-        System.out.print(ids.get(ids.size() - 1) + " ");
-        System.out.println(pila.get(pila.size() - 1) + ".                        Cortar cabezas");
+//        System.out.print(ids.get(ids.size() - 1) + " ");
+//        System.out.println(pila.get(pila.size() - 1) + ".                        Cortar cabezas");
         ids.remove(ids.size() - 1);
         lineas.remove(lineas.size() - 1);
         pila.remove(pila.size() - 1);
@@ -120,6 +167,5 @@ public class Sintaxis {
         for (int i = 0; i < tabla.length - 1; i++)
             if (tabla[i][y].compareTo("E") != 0) s = s  + Modelo.tokenToLexema(tabla[i][0]) + ", ";
         return s;
-    }
-    
+    }    
 }

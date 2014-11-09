@@ -146,7 +146,7 @@ public class Compatibilidad {
         }
     }
     
-    private ArrayList<String> posOrden(ArrayList<Lexema> operacionLexema) {
+    public ArrayList<String> posOrden(ArrayList<Lexema> operacionLexema) {
         ArrayList<String> operacion = new ArrayList();
         for (Lexema l: operacionLexema) operacion.add(l.getLexemaTipo());
         String cabeza = "";
@@ -226,6 +226,104 @@ public class Compatibilidad {
                             cabeza.compareTo(">") == 0 | cabeza.compareTo("><") == 0 |
                             cabeza.compareTo("><") == 0 | cabeza.compareTo("<=") == 0 |
                             cabeza.compareTo(">=") == 0 | cabeza.compareTo("=") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "!":
+                    break;
+                default:
+                    operandos.add(token);
+                    break;
+            }
+        }
+        while (!operadores.isEmpty()) {
+            operandos.add(operadores.get(operadores.size() - 1));
+            operadores.remove(operadores.size() - 1);
+        }
+        return operandos;
+    }
+    
+    public static ArrayList<String> posFijo(ArrayList<String> operacion) {
+        String cabeza = "";
+        ArrayList<String> operandos = new ArrayList();
+        ArrayList<String> operadores = new ArrayList();
+        for (String token: operacion) {
+            if (!operadores.isEmpty()) cabeza = operadores.get(operadores.size() - 1);
+            switch (token) {
+                case "<-":
+                case "~":
+                    operadores.add(token);
+                    break;
+                case "+":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() -1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "-":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("+") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "/":
+                    if (cabeza.compareTo("*") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "*":
+                    if (cabeza.compareTo("/") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case ">":
+                case "<":
+                case "><":
+                case "<=":
+                case ">=":
+                case "=":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0 |
+                            cabeza.compareTo("+") == 0 | cabeza.compareTo("<") == 0 |
+                            cabeza.compareTo(">") == 0 | cabeza.compareTo("><") == 0 |
+                            cabeza.compareTo("<=") == 0 | cabeza.compareTo(">=") == 0 |
+                            cabeza.compareTo("=") == 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() - 1);
+                        cabeza = operadores.get(operadores.size() - 1);
+                    }
+                    operadores.add(token);
+                    break;
+                case "(":
+                    operadores.add(token);
+                    break;
+                case ")":
+                    //if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
+                    while (cabeza.compareTo("(") != 0) {
+                        operandos.add(cabeza);
+                        operadores.remove(operadores.size() -1);
+                        cabeza = operadores.get(operadores.size() -1);
+                        if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
+                    }
+                    break;
+                case "&":
+                case "|":
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0 |
+                            cabeza.compareTo("&") == 0 | cabeza.compareTo("|") == 0 |
+                            cabeza.compareTo("+") == 0 | cabeza.compareTo("<") == 0 |
+                            cabeza.compareTo(">") == 0 | cabeza.compareTo("><") == 0 |
+                            cabeza.compareTo("<=") == 0 | cabeza.compareTo(">=") == 0 |
+                            cabeza.compareTo("=") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
                         cabeza = operadores.get(operadores.size() - 1);

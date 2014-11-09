@@ -115,16 +115,15 @@ public class Frame extends javax.swing.JFrame {
                                 .addComponent(abrir)
                                 .addGap(18, 18, 18)
                                 .addComponent(analizar))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lineasJSP, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(areaJSP, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE))
+                        .addComponent(lineasJSP, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(areaJSP, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(compilar)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,15 +168,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_analizarActionPerformed
 
     private void compilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compilarActionPerformed
-        ArrayList<String> ids = new ArrayList();
-        ArrayList<String> lineas =  new ArrayList();
-        ids.add("$");
-        lineas.add(null);
-        for (int j = lexemas.size() - 1; j >= 0; j --) {
-            ids.add(lexemas.get(j).getId());
-            lineas.add(lexemas.get(j).getLinea());
-        }
-        String errores = new Sintaxis(ids, lineas).MensajeSintaxis();
+        String errores = new Sintaxis(lexemas).MensajeSintaxis();
         Semantico sem = new Semantico(lexemas);
         errores += sem.MensajeSemantico();
         Compatibilidad com = new Compatibilidad();
@@ -185,6 +176,7 @@ public class Frame extends javax.swing.JFrame {
         errores += com.MensajeCompativilidad(lexemas);
         mensaje.setText(errores);
         compilar.setEnabled(false);
+        Etiketa.nueva = 10;
     }//GEN-LAST:event_compilarActionPerformed
 
     public static void main(String args[]) {

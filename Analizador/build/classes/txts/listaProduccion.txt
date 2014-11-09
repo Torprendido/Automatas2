@@ -59,9 +59,9 @@ compi><expresion><compi2>
 expresion><dob><d_op2>
 expresion><corchetes>[34]<d_op2>
 d_Si>[29][4]<comp>[10][32]<Sentencia>[37]<Sino><no>
-Sino>[43][4]<comp>[10][32]<Sentencia>[37]
+Sino>[43][4]<comp>[10][32]<Sentencia>[37]<Sino>
 Sino>[λ]
-no>[44][32]<Sentencia>[37]   
+no>[44][32]<Sentencia>[37]
 no>[λ]
 d_Has>[30][32]<Sentencia>[37]<mientras>
 mientras>[28][4]<comp>[10]

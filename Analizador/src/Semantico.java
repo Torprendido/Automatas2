@@ -7,11 +7,9 @@ public class Semantico extends Arbol{
     private final ArrayList<Lexema> lexemas;
     private final Arbol arb;
     private String errores;
-    private final InterfazVariables intVar;
     private final ArrayList<String> lineas = new ArrayList();
     
     public Semantico(ArrayList<Lexema> lexemas) {
-        intVar = new InterfazVariables();
         this.lexemas = lexemas;
         arb = new Arbol();
         errores = "";
@@ -22,7 +20,6 @@ public class Semantico extends Arbol{
         checarUso(arb);
         checarDuplicados(arb);
         checarVariablesNoDefinidas(arb);
-        intVar.setVisible(true);
         return errores;
     }
     
@@ -210,7 +207,6 @@ public class Semantico extends Arbol{
                         lineas.add(vars.get(i).getLinea());
                     }
                 }
-                intVar.insertarRegistro(vars.get(i));
             }
         }
         for (Arbol a: arb.getHijos()) checarUso(a);

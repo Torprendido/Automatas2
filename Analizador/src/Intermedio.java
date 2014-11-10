@@ -10,7 +10,7 @@ public class Intermedio {
     public int indiceActual;
     private int indiceFinal;
     private ArrayList<Comp> comps;
-    private Stack<Etiketa> pila;
+    private final Stack<Etiketa> pila;
     
     public Intermedio() {
         pila = new Stack();
@@ -119,7 +119,7 @@ public class Intermedio {
         } 
     }
     
-    private ArrayList<String> orAnd(ArrayList<String> posfijo) {
+    private ArrayList<String> temporales(ArrayList<String> posfijo) {
         ArrayList<String> asignaciones = new ArrayList();
         int k = 0; int i = 0; String T; String aux;
         while (posfijo.size() > 1) {
@@ -154,99 +154,23 @@ public class Intermedio {
 
             }
         }
+        if (asignaciones.isEmpty()) asignaciones.addAll(posfijo);
         return asignaciones;
     }
     
     public void setNumeroProduccion(int numeroProduccion, ArrayList<String> expresion) {
         switch (numeroProduccion) {
-            case 1:
-                Prog_PS();
-                break;
-            case 2:
-                Sentencia_2();
-                break;
-            case 3:
-                Sentencia_3();
-                break;
-            case 4:
-                Sentencia_4();
-                break;
-            case 5:
-                Sentencia_5();
-                break;
-            case 6:
-                Sentencia_6();
-                break;
-            case 7:
-                Sentencia_7();
-                break;
-            case 8:
-                Sentencia_8();
-                break;
-            case 9:
-                Sentencia_9();
-                break;
-            case 10:
-                Sentencia_10();
-                break;
-            case 11:
-                Sentencia_11();
-                break;
-            case 12:
-                Sentencia_12();
-                break;
-            case 13:
-                Sentencia_13();
-                break;
-            case 14:
-                Sentencia_14();
-                break;
-            case 15:
-                Sentencia_15();
-                break;
-            case 16:
-                break;
-            case 17:
-                break;
-            case 18:
-                break;
-            case 19:
-                break;
-            case 20:
-                break;
-            case 21:
-                break;
-            case 22:
-                break;
-            case 23:
-                break;
-            case 24:
-                break;
-            case 25:
-                break;
-            case 26:
-                break;
-            case 27:
-                break;
-            case 28:
-                break;
-            case 29:
-                break;
-            case 62:
-                sino_62();
-                break;
-            case 64:
-                no_64();
-                break;
-            case 65:
-                no_65();
-                break;
-            case 0:
-                comp2_(expresion);
-                break;
-            case 200:
-                //entrafor(expresion);
-                break;
+            case 1: Prog_PS(); break;
+            case 7: Sentencia_7(); break;
+            case 8: Sentencia_8(); break;
+            case 12: Sentencia_12(); break;
+            case 15: Sentencia_15(); break;
+            case 410: d_imprime(expresion); break;
+            case 470: d_recorrido(expresion); break;
+            case 62: sino_62(); break;
+            case 64: no_64(); break;
+            case 65: no_65(); break;
+            case 0: comp2_(expresion); break;
             default:
                 break;
         }
@@ -256,18 +180,6 @@ public class Intermedio {
         codigoIntermedio.add(indiceActual ++, "inicio\n");
         indiceFinal = indiceActual;
         codigoIntermedio.add(indiceFinal ++, "fin\n");
-    }
-
-    private void Sentencia_2() {}
-
-    private void Sentencia_3() {}
-
-    private void Sentencia_4() {}
-
-    private void Sentencia_5() {}
-
-    private void Sentencia_6() {
-        
     }
 
     private void Sentencia_7() {
@@ -280,22 +192,42 @@ public class Intermedio {
         pila.push(etiketaSuper);
         etiketaSuper = new Etiketa();
     }
-
-    private void Sentencia_9() {}
-
-    private void Sentencia_10() {}
-
-    private void Sentencia_11() {}
-
-    private void Sentencia_12() {}
-
-    private void Sentencia_13() {}
-
-    private void Sentencia_14() {}
-
+    
+    private void Sentencia_12() {
+        
+    }
+    
     private void Sentencia_15() {
         //indiceActual = indiceFinal > 0 ? indiceFinal : indiceActual;
         indiceFinal = 0;
+    }
+    
+    private void d_imprime(ArrayList<String> expresion) {
+        ArrayList<String> posfijo = Compatibilidad.posFijo(expresion);
+        ArrayList<String> asignaciones = temporales(posfijo);
+        String aux = asignaciones.get(asignaciones.size() - 1);
+        codigoIntermedio.add(indiceActual ++, "imprimir " +
+                (aux.contains("t") ? aux.substring(0, 2) : aux) + "\n"
+        );
+    }
+    
+    private void d_recorrido(ArrayList<String> expresion) {
+        etiketaSuper = new Etiketa(true);
+        codigoIntermedio.add(
+                indiceActual ++,
+                expresion.get(10) + " = " + expresion.get(2)+ "\n" +
+                etiketaSuper.inicio + ":\n" +
+                "if (" + expresion.get(10) + ("++".contains(expresion.get(6)) ? "<" : ">") + expresion.get(4) + ") goto " + etiketaSuper.verdadera1 + "\n" +
+                "goto " + etiketaSuper.falsa1 + "\n" +
+                etiketaSuper.verdadera1 + ":\n"
+        );
+        indiceFinal = indiceActual;
+        codigoIntermedio.add(
+                indiceFinal ++,
+                expresion.get(10) + "=" + expresion.get(10) + ("++".contains(expresion.get(6)) ? "+" : "-") + expresion.get(7) + "\n" +
+                "goto " + etiketaSuper.inicio + "\n" +
+                etiketaSuper.falsa1 + ":\n"
+        );
     }
     
     private void sino_62() {
@@ -329,7 +261,7 @@ public class Intermedio {
     
     private void comp2_(ArrayList<String> expresion) {
         ArrayList<String> posfijo = Compatibilidad.posFijo(expresion);
-        ArrayList<String> asignaciones = orAnd(posfijo);
+        ArrayList<String> asignaciones = temporales(posfijo);
         acomodarEtiketas(asignaciones);
         if (etiketaSuper.inicio > 0) {
             indiceFinal = indiceActual;
@@ -337,9 +269,5 @@ public class Intermedio {
             codigoIntermedio.add(indiceFinal ++, etiketaSuper.falsa1 + ":\n");
             etiketaSuper = pila.pop();
         }
-    }
-    
-    private void entrafor(ArrayList<String> expresion) {
-        System.out.println(expresion);
     }
 }

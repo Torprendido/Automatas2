@@ -308,7 +308,10 @@ public class Compatibilidad {
                     operadores.add(token);
                     break;
                 case ")":
-                    //if (cabeza.compareTo("(") == 0) operadores.remove(operadores.size() - 1);
+                    if ("(".contains(cabeza)) {
+                        operadores.remove(operadores.size() -1);
+                        break;
+                    }
                     while (cabeza.compareTo("(") != 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() -1);

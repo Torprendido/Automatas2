@@ -64,23 +64,27 @@ public class Sintaxis {
         ArrayList<String> expresion = new ArrayList();
         int cuentaParentesis = 0;
         boolean entraif = false;
-        boolean entrafor = false;
+        boolean entraImp = false;
+        boolean entraFor = false;
         while (!ids.isEmpty()) {
             if (comapararTopes(ids, pila)) {
-                if (entraif | entrafor) {
+                if (entraif | entraImp | entraFor) {
                     String aux = nombres.get(ids.size() - 1);
-                    if (!aux.contains(",")) expresion.add(aux);
+                    expresion.add(aux);
                     if (aux.compareTo("(") == 0) cuentaParentesis ++;
                     else if (aux.compareTo(")") == 0) cuentaParentesis --;
-                    else if (aux.compareTo(",") == 0) cuentaParentesis --;
+                    else if (aux.compareTo("¿") == 0) cuentaParentesis = 0;
                     if (cuentaParentesis == 0) {
                         if (entraif) {
                             inter.setNumeroProduccion(0, expresion);
                             entraif = false;
-                        } //else if (entrafor) {
-//                            inter.setNumeroProduccion(200, expresion);
-//                            entrafor = false;
-//                        }
+                        } else if (entraImp) {
+                            inter.setNumeroProduccion(410, expresion);
+                            entraImp = false;
+                        } else if (entraFor) {
+                            inter.setNumeroProduccion(470, expresion);
+                            entraFor = false;
+                        }
                         expresion = new ArrayList();
                     }
                 }
@@ -111,11 +115,15 @@ public class Sintaxis {
                         cuentaParentesis ++;
                         entraif = true;
                     }
-                } else if (numPro == 59 | numPro == 60) {
-//                    if (!entrafor) {
-//                        cuentaParentesis ++;
-//                        entraif = true;
-//                    }
+                } else if (numPro == 42 | numPro == 42) {
+                    if (!entraImp) {
+                        expresion.add("(");
+                        cuentaParentesis ++;
+                        entraImp = true;
+                    }
+                } else if (numPro == 47) {
+                    cuentaParentesis = 1;
+                    entraFor = true;
                 }
                 inter.setNumeroProduccion(numPro, expresion);
             }

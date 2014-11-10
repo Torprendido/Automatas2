@@ -48,26 +48,5 @@ public class Arbol {
     
     public ArrayList<Variable> getVariables() {
         return variables;
-    }
-    
-    
-    public static void main(String[] args) {
-        Arbol padre = new Arbol();
-        padre.insertartHijo(new Arbol());
-        padre.insertartHijo(new Arbol());
-        padre.insertartHijo(new Arbol());
-        padre.insertartHijo(new Arbol());
-        
-        System.out.println("yo soy el padre de vart: " + padre + "\n");
-        ArrayList<Arbol> hijosDePadre = padre.getHijos();
-        for (int i = 0; i < hijosDePadre.size(); i++) {
-            System.out.println(hijosDePadre.get(i));
-        }
-        
-        Arbol bart = hijosDePadre.get(0);
-        System.out.println();
-        System.out.println(bart.getPadre()); //o tutor
-    }
-    
-    
+    }   
 }

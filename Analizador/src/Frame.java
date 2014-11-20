@@ -169,14 +169,18 @@ public class Frame extends javax.swing.JFrame {
 
     private void compilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compilarActionPerformed
         String errores = new Sintaxis(lexemas).MensajeSintaxis();
-        Semantico sem = new Semantico(lexemas);
-        errores += sem.MensajeSemantico();
-        Compatibilidad com = new Compatibilidad();
-        com.setLineasError(sem.getLineasdeError());
-        errores += com.MensajeCompativilidad(lexemas);
-        mensaje.setText(errores);
-        compilar.setEnabled(false);
-        Etiketa.nueva = 10;
+        if (errores.length() != 0) mensaje.setText(errores);
+        else {
+            Semantico sem = new Semantico(lexemas);
+            errores += sem.MensajeSemantico();
+            Compatibilidad com = new Compatibilidad();
+            com.setLineasError(sem.getLineasdeError());
+            errores += com.MensajeCompativilidad(lexemas);
+            mensaje.setText(errores);
+            compilar.setEnabled(false);
+            Etiketa.nueva = 10;
+            Ensamblador asm = errores.length() > 0 ? null : new Ensamblador();
+        }
     }//GEN-LAST:event_compilarActionPerformed
 
     public static void main(String args[]) {

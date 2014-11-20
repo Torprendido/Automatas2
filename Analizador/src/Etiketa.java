@@ -2,6 +2,7 @@
 public class Etiketa {
 
     public int verdadera1 = 0, falsa1 = 0, verdadera2 = 0, falsa2, inicio = 0, siguiente = 0;
+    public String var = "";
     public static int nueva = 10;
     public String opR = "";
     

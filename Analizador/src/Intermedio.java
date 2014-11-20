@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class Intermedio {
     
-    public final ArrayList<String> codigoIntermedio;
+    public static ArrayList<String> codigoIntermedio;
     private Etiketa etiketaSuper;
     private Etiketa etiketaUltima;
     public int indiceActual;
@@ -14,8 +14,8 @@ public class Intermedio {
     
     public Intermedio() {
         pila = new Stack();
-        codigoIntermedio = new ArrayList();
         indiceActual = 0; indiceFinal = 0;
+        codigoIntermedio = new ArrayList();
     }
 
     private void acomodarEtiketas(ArrayList<String> asignaciones) {
@@ -37,6 +37,7 @@ public class Intermedio {
         recurcivoAcomodar(etiketaUltima, asignacion, asignaciones, j);
         Etiketa e = etiketaSuper;
         for (String a: asignaciones) {
+            String aux = a.substring(3, a.length() - 1);
             if (
                     a.contains(">") | a.contains(">=")| a.contains("<")|
                     a.contains("<=") | a.contains("=") | a.contains("><")
@@ -46,17 +47,19 @@ public class Intermedio {
                         if (!c.lado) {
                             codigoIntermedio.add(
                                     indiceActual ++,
-                                    "if (" + a.substring(3, a.length() - 1)+") goto " + c.verdadera +"\n" +
-                                    "goto " + c.falsa + "\n" +
-                                    (c.opR.contains("&")?c.verdadera + ":\n":c.falsa + ":\n")
+                                    "compara " + operadores(aux) + "\n" +
+                                    salto +" E" + c.verdadera +"\n" +
+                                    "JMP E" + c.falsa + "\n" +
+                                    (c.opR.contains("&")?"E" + c.verdadera + ":\n": "E" + c.falsa + ":\n")
                             );
                             break;
                         } else {
                             codigoIntermedio.add(
                                     indiceActual ++,
-                                    "if (" + a.substring(3, a.length() - 1)+") goto " + c.verdadera +"\n" +
-                                    "goto " + c.falsa + "\n" +
-                                    aDonde(c) + ":\n"
+                                    "compara " + operadores(aux) + "\n" +
+                                    salto +" E" + c.verdadera +"\n" +
+                                    "JMP E" + c.falsa + "\n" +
+                                    "E" + aDonde(c) + ":\n"
                             );
                             break;
                         }
@@ -64,13 +67,40 @@ public class Intermedio {
                 if (comps.isEmpty()) {
                     codigoIntermedio.add(
                             indiceActual ++,
-                            "if (" + a.substring(3, a.length() - 1)+") goto " + e.verdadera1 +"\n" +
-                            "goto " + e.falsa1 + "\n" +
-                            e.verdadera1+ ":\n"
-
+                            "compara " + operadores(aux) + "\n" +
+                            salto + " E" + e.verdadera1 +"\n" +
+                            "JMP E" + e.falsa1 + "\n" +
+                            "E" + e.verdadera1+ ":\n"
                     );
                 }
             }
+        }
+    }
+    
+    private String salto = "";
+    private String operadores(String exp) {
+        if (exp.contains("<=")) {
+            salto = "JLE";
+            return exp.replaceAll("<=", ", ");
+        } else if (exp.contains("><")) {
+            salto = "JNE";
+            return exp.replaceAll("><", ", ");
+        }
+        else if (exp.contains(">=")) {
+            salto = "JGE";
+            return exp.replaceAll(">=", ", ");
+        }
+        else if (exp.contains("<")) {
+            salto = "JL";
+            return exp.replaceAll("<", ", ");
+        }
+        else if (exp.contains(">")) {
+            salto = "JG";
+            return exp.replaceAll(">", ", ");
+        }
+        else {
+            salto = "JE";
+            return exp.replaceAll("=", ", ");
         }
     }
     
@@ -125,7 +155,7 @@ public class Intermedio {
         while (posfijo.size() > 1) {
             switch (posfijo.get(i)) {
                 case "+": case "-": case "*": case "/": case "~":
-                    T = "t" + k++;
+                    T = "T" + k++;
                     aux = T + "@" +  posfijo.get(i-2) + posfijo.get(i) + posfijo.get(i-1) + "\n";
                     asignaciones.add(aux);
                     codigoIntermedio.add(indiceActual ++, aux);
@@ -136,7 +166,7 @@ public class Intermedio {
                     i = 0;
                     break;
                 case "|": case "&": case ">": case "<": case "><": case ">=": case "<=": case "=":
-                    T = "t" + k++;
+                    T = "T" + k++;
                     aux = T + "=" +  posfijo.get(i-2) + posfijo.get(i) + posfijo.get(i-1) + "\n";
                     asignaciones.add(aux);
                     posfijo.add(i + 1, T);
@@ -163,29 +193,50 @@ public class Intermedio {
             case 1: Prog_PS(); break;
             case 7: Sentencia_7(); break;
             case 8: Sentencia_8(); break;
-            case 12: Sentencia_12(); break;
+            case 120: Sentencia_12(expresion.get(2)); break;
+            case 730: casos(expresion.get(1)); break;
+            case 74: casos2(); break;
             case 15: Sentencia_15(); break;
             case 410: d_imprime(expresion); break;
             case 470: d_recorrido(expresion); break;
             case 62: sino_62(); break;
             case 64: no_64(); break;
             case 65: no_65(); break;
+            case 460: leer(expresion); break;
             case 0: comp2_(expresion); break;
             default:
                 break;
         }
     }
     
+    private void leer(ArrayList<String> expresion) {
+        System.out.println(expresion);
+    }
+    
     private void Prog_PS() {
-        codigoIntermedio.add(indiceActual ++, "inicio\n");
+        codigoIntermedio.add(
+                indiceActual ++,
+                "compara macro op1, op2\n" +
+                "mov ax, op1\n" +
+                "cmp ax, op2\n" +
+                "endm\n\n" + 
+                ".model small\n" +
+                ".stack 200h\n" +
+                ".data\n"
+        );
+        codigoIntermedio.add(
+                indiceActual ++,
+                ".code\n" +
+                ".startup\n"
+        );
         indiceFinal = indiceActual;
-        codigoIntermedio.add(indiceFinal ++, "fin\n");
+        codigoIntermedio.add(indiceFinal ++, ".exit\nend\n");
     }
 
     private void Sentencia_7() {
         pila.push(etiketaSuper);
         etiketaSuper = new Etiketa(true);
-        codigoIntermedio.add(indiceActual ++, etiketaSuper.inicio + ":\n");
+        codigoIntermedio.add(indiceActual ++, "E" + etiketaSuper.inicio + ":\n");
     }
 
     private void Sentencia_8() {
@@ -193,13 +244,39 @@ public class Intermedio {
         etiketaSuper = new Etiketa();
     }
     
-    private void Sentencia_12() {
-        
+    private void Sentencia_12(String var) {
+        etiketaSuper = new Etiketa();
+        etiketaSuper.var = var;
+        etiketaSuper.siguiente = Etiketa.nueva ++;
+        indiceFinal = indiceActual;
+        codigoIntermedio.add(indiceFinal ++, "E" + etiketaSuper.siguiente + ":\n");
+    }
+    
+    private void casos(String var) {
+        Etiketa e = new Etiketa();
+        codigoIntermedio.add(
+                indiceActual ++,
+                "compara " + var + "=" + etiketaSuper.var + "\n" +
+                salto + " E" + e.verdadera1 + "\n" +
+                "JMP E" + e.falsa1 + "\n"
+        );
+        indiceFinal = indiceActual;
+        codigoIntermedio.add(
+                indiceFinal ++,
+                "E" + e.verdadera1  + ":\n" +
+                "JMP E" + etiketaSuper.siguiente + "\n" + 
+                "E" + e.falsa1 + ":\n"
+        );
+    }
+    
+    private void casos2() {
+        indiceFinal = indiceActual;
+        codigoIntermedio.add(indiceFinal ++, "JMP E" + etiketaSuper.siguiente + "\n");
     }
     
     private void Sentencia_15() {
-        //indiceActual = indiceFinal > 0 ? indiceFinal : indiceActual;
-        indiceFinal = 0;
+        indiceActual = indiceFinal > indiceActual ? indiceFinal : indiceActual + 1;
+        //indiceFinal = 0;
     }
     
     private void d_imprime(ArrayList<String> expresion) {
@@ -207,7 +284,7 @@ public class Intermedio {
         ArrayList<String> asignaciones = temporales(posfijo);
         String aux = asignaciones.get(asignaciones.size() - 1);
         codigoIntermedio.add(indiceActual ++, "imprimir " +
-                (aux.contains("t") ? aux.substring(0, 2) : aux) + "\n"
+                (aux.contains("T") ? aux.substring(0, 2) : aux) + "\n"
         );
     }
     
@@ -216,46 +293,50 @@ public class Intermedio {
         codigoIntermedio.add(
                 indiceActual ++,
                 expresion.get(10) + " = " + expresion.get(2)+ "\n" +
-                etiketaSuper.inicio + ":\n" +
-                "if (" + expresion.get(10) + ("++".contains(expresion.get(6)) ? "<" : ">") + expresion.get(4) + ") goto " + etiketaSuper.verdadera1 + "\n" +
-                "goto " + etiketaSuper.falsa1 + "\n" +
-                etiketaSuper.verdadera1 + ":\n"
+                "E" + etiketaSuper.inicio + ":\n" +
+                "compara " + expresion.get(10) + ("++".contains(expresion.get(6)) ? "<" : ">") + expresion.get(4) + "\n" +
+                salto + " E" + etiketaSuper.verdadera1 + "\n" +
+                "JMP E" + etiketaSuper.falsa1 + "\n" +
+                "E" + etiketaSuper.verdadera1 + ":\n"
         );
         indiceFinal = indiceActual;
         codigoIntermedio.add(
                 indiceFinal ++,
                 expresion.get(10) + "=" + expresion.get(10) + ("++".contains(expresion.get(6)) ? "+" : "-") + expresion.get(7) + "\n" +
-                "goto " + etiketaSuper.inicio + "\n" +
-                etiketaSuper.falsa1 + ":\n"
+                "JMP E" + etiketaSuper.inicio + "\n" +
+                "E" + etiketaSuper.falsa1 + ":\n"
         );
     }
     
     private void sino_62() {
         int siguiente = etiketaSuper.siguiente == 0 ? Etiketa.nueva ++ : etiketaSuper.siguiente;
         codigoIntermedio.add(
-                indiceActual ++,
-                "goto " + siguiente + "\n" +
-                etiketaSuper.falsa1 + ":\n"
+                indiceActual - 1,
+                "JMP E" + siguiente + "\n" +
+                "E" + etiketaSuper.falsa1 + ":\n"
         );
         etiketaSuper = new Etiketa();
         etiketaSuper.siguiente = siguiente;
     }
     
     private void no_64() {
+        etiketaSuper.siguiente = etiketaSuper.siguiente == 0 ? Etiketa.nueva ++ : etiketaSuper.siguiente;
         codigoIntermedio.add(
-                indiceActual ++,
-                "goto " + etiketaSuper.siguiente + "\n" +
-                etiketaSuper.falsa1 + ":\n"
+                indiceActual - 1,
+                "JMP E" + etiketaSuper.siguiente + "\n" +
+                "E" + etiketaSuper.falsa1 + ":\n"
         );
         indiceFinal = indiceActual;
-        codigoIntermedio.add(indiceFinal ++, etiketaSuper.siguiente + ":\n"
+        codigoIntermedio.add(
+                indiceFinal ++,
+                "E" + etiketaSuper.siguiente +":\n"
         );
         etiketaSuper = pila.pop();
     }
     
     private void no_65() {
-        codigoIntermedio.add(indiceActual ++, etiketaSuper.falsa1 + ":\n");
-        if (etiketaSuper.siguiente > 0) codigoIntermedio.add(indiceActual ++, etiketaSuper.siguiente + ":\n");
+        codigoIntermedio.add(indiceActual - 1, "E" + etiketaSuper.falsa1 + ":\n");
+        if (etiketaSuper.siguiente > 0) codigoIntermedio.add(indiceActual, "E" + etiketaSuper.siguiente + ":\n");
         etiketaSuper = pila.pop();
     }
     
@@ -265,8 +346,11 @@ public class Intermedio {
         acomodarEtiketas(asignaciones);
         if (etiketaSuper.inicio > 0) {
             indiceFinal = indiceActual;
-            codigoIntermedio.add(indiceFinal ++, "goto " + etiketaSuper.inicio + "\n");
-            codigoIntermedio.add(indiceFinal ++, etiketaSuper.falsa1 + ":\n");
+            codigoIntermedio.add(
+                    indiceFinal ++,
+                    "JMP E" + etiketaSuper.inicio + "\n" +
+                    "E" + etiketaSuper.falsa1 + ":\n"
+            );
             etiketaSuper = pila.pop();
         }
     }

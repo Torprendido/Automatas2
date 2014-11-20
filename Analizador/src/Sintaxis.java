@@ -66,14 +66,19 @@ public class Sintaxis {
         boolean entraif = false;
         boolean entraImp = false;
         boolean entraFor = false;
+        boolean entraSw = false;
+        boolean entraCaso = false;
+        boolean entraLeer = false;
         while (!ids.isEmpty()) {
             if (comapararTopes(ids, pila)) {
-                if (entraif | entraImp | entraFor) {
+                if (entraif | entraImp | entraFor | entraSw | entraCaso | entraLeer) {
                     String aux = nombres.get(ids.size() - 1);
                     expresion.add(aux);
                     if (aux.compareTo("(") == 0) cuentaParentesis ++;
                     else if (aux.compareTo(")") == 0) cuentaParentesis --;
                     else if (aux.compareTo("¿") == 0) cuentaParentesis = 0;
+                    else if (aux.compareTo(":") == 0) cuentaParentesis = 0;
+                    else if (aux.compareTo("\\") == 0) cuentaParentesis = 0;
                     if (cuentaParentesis == 0) {
                         if (entraif) {
                             inter.setNumeroProduccion(0, expresion);
@@ -84,6 +89,15 @@ public class Sintaxis {
                         } else if (entraFor) {
                             inter.setNumeroProduccion(470, expresion);
                             entraFor = false;
+                        } else if (entraSw) {
+                            inter.setNumeroProduccion(120, expresion);
+                            entraSw = false;
+                        } else if (entraCaso) {
+                            inter.setNumeroProduccion(730, expresion);
+                            entraCaso = false;
+                        } else if (entraLeer) {
+                            inter.setNumeroProduccion(460, expresion);
+                            entraLeer = false;
                         }
                         expresion = new ArrayList();
                     }
@@ -124,11 +138,19 @@ public class Sintaxis {
                 } else if (numPro == 47) {
                     cuentaParentesis = 1;
                     entraFor = true;
+                } else if (numPro == 12) {
+                    cuentaParentesis ++;
+                    entraSw = true;
+                } else if (numPro == 73) {
+                    cuentaParentesis = 1;
+                    entraCaso = true;
+                } else if (numPro == 46) {
+                    cuentaParentesis = 1;
+                    entraLeer = true;
                 }
                 inter.setNumeroProduccion(numPro, expresion);
             }
         }
-        System.out.println(inter.codigoIntermedio);
         return "";
     }
     

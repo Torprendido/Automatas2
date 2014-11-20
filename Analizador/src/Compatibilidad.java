@@ -90,7 +90,7 @@ public class Compatibilidad {
                 case "leer":
                     operacion = new ArrayList();
                     Lexema le = new Lexema();
-                    le.setLexemaTipo("cadena");le.setLinea(l.getLinea());
+                    le.setLexemaTipo("entero");le.setLinea(l.getLinea());
                     operacion.add(le);
                     le = new Lexema();
                     le.setLexemaTipo("<-");le.setLinea(l.getLinea());
@@ -258,6 +258,11 @@ public class Compatibilidad {
                     operadores.add(token);
                     break;
                 case "+":
+                    if (cabeza.compareTo(token) == 0) {
+                        operandos.add(operadores.remove(operadores.size() - 1));
+                        operadores.add(token);
+                        break;
+                    }
                     while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
@@ -266,6 +271,11 @@ public class Compatibilidad {
                     operadores.add(token);
                     break;
                 case "-":
+                    if (cabeza.compareTo(token) == 0) {
+                        operandos.add(operadores.remove(operadores.size() - 1));
+                        operadores.add(token);
+                        break;
+                    }
                     while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("+") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
@@ -274,6 +284,11 @@ public class Compatibilidad {
                     operadores.add(token);
                     break;
                 case "/":
+                    if (cabeza.compareTo(token) == 0) {
+                        operandos.add(operadores.remove(operadores.size() - 1));
+                        operadores.add(token);
+                        break;
+                    }
                     if (cabeza.compareTo("*") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
@@ -281,6 +296,11 @@ public class Compatibilidad {
                     operadores.add(token);
                     break;
                 case "*":
+                    if (cabeza.compareTo(token) == 0) {
+                        operandos.add(operadores.remove(operadores.size() - 1));
+                        operadores.add(token);
+                        break;
+                    }
                     if (cabeza.compareTo("/") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);

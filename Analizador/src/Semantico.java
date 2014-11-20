@@ -8,6 +8,7 @@ public class Semantico extends Arbol{
     private final Arbol arb;
     private String errores;
     private final ArrayList<String> lineas = new ArrayList();
+    public static final ArrayList<Variable> variablesGlobales = new ArrayList();
     
     public Semantico(ArrayList<Lexema> lexemas) {
         this.lexemas = lexemas;
@@ -159,6 +160,7 @@ public class Semantico extends Arbol{
                     );
                     var.setLexemaObj(lexemas.get(i));
                     arb.insertarVariables(var);
+                    variablesGlobales.add(var);
                     lexemas.get(i).setLexemaTipo(Modelo.tokenToLexema(tipo));
                 }
                 else {
@@ -215,13 +217,24 @@ public class Semantico extends Arbol{
     private boolean checarUsoSiguienteNivel(Arbol arbol, String nombre) {
         for (Variable v: arbol.getVariables()) {
             boolean nombresIguales = nombre.compareTo(v.getNombreVariable()) == 0;
-            boolean seEncuentra = nombresIguales & !v.esDeclaracion();
             boolean esGlobalDeNivel = nombresIguales & v.esDeclaracion();
             if (esGlobalDeNivel) return false;
-            if (!seEncuentra)
-                for (Arbol a: arbol.getHijos()) return checarUsoSiguienteNivel(a, nombre);
-            if (seEncuentra) return true;
         }
+        boolean seEncuentra = false;
+        for (Variable v: arbol.getVariables()) {
+            boolean nombresIguales = nombre.compareTo(v.getNombreVariable()) == 0;
+            if (nombresIguales & !v.esDeclaracion()) {
+                seEncuentra = true;
+                break;
+            }
+        }
+        if (!seEncuentra)
+                for (Arbol a: arbol.getHijos()) {
+                    if (checarUsoSiguienteNivel(a, nombre)) {
+                        return true;
+                    }
+                }
+        else if (seEncuentra) return true;
         return false;
     }
     

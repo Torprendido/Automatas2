@@ -263,7 +263,7 @@ public class Compatibilidad {
                         operadores.add(token);
                         break;
                     }
-                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0) {
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("-") == 0 | cabeza.compareTo("+") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
                         cabeza = operadores.get(operadores.size() -1);
@@ -276,7 +276,7 @@ public class Compatibilidad {
                         operadores.add(token);
                         break;
                     }
-                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("+") == 0) {
+                    while (cabeza.compareTo("*") == 0 | cabeza.compareTo("/") == 0 | cabeza.compareTo("+") == 0 | cabeza.compareTo("-") == 0) {
                         operandos.add(cabeza);
                         operadores.remove(operadores.size() - 1);
                         cabeza = operadores.get(operadores.size() - 1);

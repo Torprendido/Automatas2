@@ -69,9 +69,11 @@ public class Sintaxis {
         boolean entraSw = false;
         boolean entraCaso = false;
         boolean entraLeer = false;
+        boolean entraTipo = false;
+        boolean entraAsig = false;
         while (!ids.isEmpty()) {
             if (comapararTopes(ids, pila)) {
-                if (entraif | entraImp | entraFor | entraSw | entraCaso | entraLeer) {
+                if (entraif | entraImp | entraFor | entraSw | entraCaso | entraLeer | entraTipo | entraAsig) {
                     String aux = nombres.get(ids.size() - 1);
                     expresion.add(aux);
                     if (aux.compareTo("(") == 0) cuentaParentesis ++;
@@ -98,6 +100,11 @@ public class Sintaxis {
                         } else if (entraLeer) {
                             inter.setNumeroProduccion(460, expresion);
                             entraLeer = false;
+                        } else if (entraTipo) {
+                            entraTipo =  false;
+                        } else if (entraAsig) {
+                            inter.setNumeroProduccion(750, expresion);
+                            entraAsig = false;
                         }
                         expresion = new ArrayList();
                     }
@@ -147,6 +154,12 @@ public class Sintaxis {
                 } else if (numPro == 46) {
                     cuentaParentesis = 1;
                     entraLeer = true;
+                } else if (numPro == 16 | numPro == 18) {
+                    cuentaParentesis = 1;
+                    entraTipo = true;
+                } else if (numPro == 75) {
+                    cuentaParentesis = 1;
+                    entraAsig = true;
                 }
                 inter.setNumeroProduccion(numPro, expresion);
             }

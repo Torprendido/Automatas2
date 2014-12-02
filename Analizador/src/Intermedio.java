@@ -11,6 +11,7 @@ public class Intermedio {
     private int indiceFinal;
     private ArrayList<Comp> comps;
     private final Stack<Etiketa> pila;
+    public final static Stack<String> cadenas = new Stack();
     
     public Intermedio() {
         pila = new Stack();
@@ -149,6 +150,23 @@ public class Intermedio {
         } 
     }
     
+    private String instrucEnsamble(String op1, String simbolo, String op2) {
+        op1 = op1.contains("T") ? "@temp" : op1;
+        op2 = op2.contains("T") ? "@temp" : op2;
+        switch (simbolo) {
+            case "+":
+                return op1.compareTo(op2) == 0 ? "pop @temp0\npop @temp\nsuma @temp, @temp0\n" : "suma " + op1 + ", " + op2 + "\n";
+            case "-":
+                return op1.compareTo(op2) == 0 ? "pop @temp0\npop @temp\nresta @temp, @temp0\n" : "resta " + op1 + ", " + op2 + "\n";
+            case "*":
+                return op1.compareTo(op2) == 0 ? "pop @temp0\npop @temp\nmulti @temp, @temp0\n" : "multi " + op1 + ", " + op2 + "\n";
+            case "/":
+                return op1.compareTo(op2) == 0? "pop @temp0\npop @temp\ndivi @temp, @temp0\n" : "divi " + op1 + ", " + op2 + "\n";
+            default:
+                return "mov dx, @temp\nmov " + op1 + ", dx\n";
+        }
+    }
+    
     private ArrayList<String> temporales(ArrayList<String> posfijo) {
         ArrayList<String> asignaciones = new ArrayList();
         int k = 0; int i = 0; String T; String aux;
@@ -158,6 +176,7 @@ public class Intermedio {
                     T = "T" + k++;
                     aux = T + "@" +  posfijo.get(i-2) + posfijo.get(i) + posfijo.get(i-1) + "\n";
                     asignaciones.add(aux);
+                    aux = instrucEnsamble(posfijo.get(i-2), posfijo.get(i), posfijo.get(i-1));
                     codigoIntermedio.add(indiceActual ++, aux);
                     posfijo.add(i + 1, T);
                     posfijo.remove(i - 2);
@@ -176,7 +195,12 @@ public class Intermedio {
                     i = 0;
                     break;
                 case "<-":
-                    
+                    aux = instrucEnsamble(posfijo.get(i-2), posfijo.get(i), posfijo.get(i-1));
+                    codigoIntermedio.add(indiceActual ++, aux);
+                    posfijo.add(i + 1, "");
+                    posfijo.remove(i - 2);
+                    posfijo.remove(i - 2);
+                    posfijo.remove(i - 2);
                     break;
                 default:
                     i ++;
@@ -196,6 +220,7 @@ public class Intermedio {
             case 120: Sentencia_12(expresion.get(2)); break;
             case 730: casos(expresion.get(1)); break;
             case 74: casos2(); break;
+            case 750: asignacion(expresion); break;
             case 15: Sentencia_15(); break;
             case 410: d_imprime(expresion); break;
             case 470: d_recorrido(expresion); break;
@@ -209,20 +234,106 @@ public class Intermedio {
         }
     }
     
+    private void asignacion(ArrayList<String> expresion) {
+        expresion.remove(expresion.size() - 1);
+        temporales(Compatibilidad.posFijo(expresion));
+    }
+    
     private void leer(ArrayList<String> expresion) {
-        System.out.println(expresion);
+        codigoIntermedio.add(
+                indiceActual ++,
+                expresion.get(0) + " " + expresion.get(2) +"\n"
+        );
     }
     
     private void Prog_PS() {
         codigoIntermedio.add(
                 indiceActual ++,
-                "compara macro op1, op2\n" +
-                "mov ax, op1\n" +
-                "cmp ax, op2\n" +
-                "endm\n\n" + 
+                "compara macro @op1, @op2\n" +
+                "mov ax, @op1\n" +
+                "cmp ax, @op2\n" +
+                "endm\n\n" +
+                "suma macro @op1, @op2\n" +
+                "mov dx, @op1\n" +
+                "add dx, @op2\n" +
+                "mov @temp, dx\n" +
+                "push dx\n" +
+                "endm\n\n" +
+                "resta macro @op1, @op2\n" +
+                "mov dx, @op1\n" +
+                "sub dx, @op2\n" +
+                "mov @temp, dx\n" +
+                "push dx\n" +
+                "endm\n\n" +
+                "multi  macro @op1, @op2\n" +
+                "mov ax, @op1\n" +
+                "mov ah, 0\n" +
+                "mov bx, @op2\n" +
+                "mul bx\n" +
+                "mov @temp, ax\n" +
+                "push ax\n" +
+                "endm\n\n" +
+                "divi  macro @op1, @op2\n" +
+                "mov ax, @op1\n" +
+                "mov ah, 0\n" +
+                "mov bx, @op2\n" +
+                "div bl\n" +
+                "mov ah, 0\n" +
+                "mov @temp, ax\n" +
+                "push ax\n" +
+                "endm\n\n" +
+                "leer macro var\n" +
+                "mov var, 10\n" +
+                "mov ah, 1\n" +
+                "int 21h\n" +
+                "mov ah, 0\n" +
+                "sub al, 48\n" +
+                "mul var\n" +  
+                "mov var, ax\n" +
+                "mov ah, 1\n" +
+                "int 21h\n" +
+                "mov ah, 0\n" +
+                "sub al, 48\n" +
+                "add var, ax\n" +
+                "mov ah, 2\n" +
+                "mov dl, 10\n" +
+                "int 21h\n" +
+                "endm\n\n" +
+                "imprimir macro MENS\n" +
+                "local A1\n" +
+                "local A2\n" +
+                "mov cl, lengthof MENS\n" +
+                "cmp cl, 1\n" +
+                "je A1\n" +
+                "mov ah, 09h\n" +
+                "mov dx, offset MENS\n" +
+                "int 21h\n" +
+                "mov ah, 2\n" +
+                "mov dl, 10\n" +
+                "int 21\n" +
+                "jmp A2\n" +
+                "A1: mov ax, word ptr MENS\n" +
+                "mov ah, 0\n" +
+                "mov bl, 10\n" +
+                "div bl\n" +
+                "add al, 48\n" +
+                "add ah, 48\n" +
+                "push ax\n" +
+                "mov ah, 2\n" +
+                "pop dx\n" +
+                "int 21h\n" +
+                "mov dl, dh\n" +
+                "int 21h\n" +
+                "mov dl, 10\n" +
+                "int 21h\n" +
+                "A2:\n" +
+                "endm\n" +                        
                 ".model small\n" +
                 ".stack 200h\n" +
-                ".data\n"
+                ".data\n" +
+                "@temp word ?\n" +
+                "@temp0 word ?\n"
+                
         );
         codigoIntermedio.add(
                 indiceActual ++,
@@ -279,22 +390,28 @@ public class Intermedio {
         //indiceFinal = 0;
     }
     
+    private int indiceCadena = 0;
     private void d_imprime(ArrayList<String> expresion) {
         ArrayList<String> posfijo = Compatibilidad.posFijo(expresion);
         ArrayList<String> asignaciones = temporales(posfijo);
         String aux = asignaciones.get(asignaciones.size() - 1);
+        if (aux.contains("'")) {
+            cadenas.add(aux + ", 10, '$'");
+            aux =  "@cadena" + indiceCadena ++;
+        }
         codigoIntermedio.add(indiceActual ++, "imprimir " +
-                (aux.contains("T") ? aux.substring(0, 2) : aux) + "\n"
+                (aux.contains("T") ? aux.substring(0, 2) : aux + "\n")
         );
     }
     
     private void d_recorrido(ArrayList<String> expresion) {
+        pila.add(etiketaSuper);
         etiketaSuper = new Etiketa(true);
         codigoIntermedio.add(
                 indiceActual ++,
-                expresion.get(10) + " = " + expresion.get(2)+ "\n" +
+                "mov " + expresion.get(10) + ", " + expresion.get(2)+ "\n" +
                 "E" + etiketaSuper.inicio + ":\n" +
-                "compara " + expresion.get(10) + ("++".contains(expresion.get(6)) ? "<" : ">") + expresion.get(4) + "\n" +
+                "compara " + operadores(expresion.get(10) + ("++".contains(expresion.get(6)) ? "<" : ">")) + expresion.get(4) + "\n" +
                 salto + " E" + etiketaSuper.verdadera1 + "\n" +
                 "JMP E" + etiketaSuper.falsa1 + "\n" +
                 "E" + etiketaSuper.verdadera1 + ":\n"
@@ -302,10 +419,11 @@ public class Intermedio {
         indiceFinal = indiceActual;
         codigoIntermedio.add(
                 indiceFinal ++,
-                expresion.get(10) + "=" + expresion.get(10) + ("++".contains(expresion.get(6)) ? "+" : "-") + expresion.get(7) + "\n" +
+                ("++".contains(expresion.get(6)) ? "add " : "sub ") + expresion.get(10) + ", " + expresion.get(7) + "\n" +
                 "JMP E" + etiketaSuper.inicio + "\n" +
                 "E" + etiketaSuper.falsa1 + ":\n"
         );
+        etiketaSuper = pila.pop();
     }
     
     private void sino_62() {

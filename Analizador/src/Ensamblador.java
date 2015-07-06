@@ -1,11 +1,8 @@
 
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 public class Ensamblador {
 
@@ -36,7 +33,8 @@ public class Ensamblador {
         for (String s: Intermedio.cadenas) Intermedio.codigoIntermedio.add(i ++, "@cadena" + j ++ + " db " + s + "\n");
         Intermedio.cadenas.clear();
         try {
-            BufferedWriter archivo = new BufferedWriter(new FileWriter ("/home/torpre/.dosemu/drive_c/Autom2/autom2.asm", false));
+            
+            BufferedWriter archivo = new BufferedWriter(new FileWriter (System.getProperty("user.home") + "/ensamblador.asm", false));
             for (String c : Intermedio.codigoIntermedio) archivo.write(c);
             archivo.close();
         } catch (FileNotFoundException ex) {System.err.println(ex.getMessage());

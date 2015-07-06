@@ -5,7 +5,7 @@ import java.util.Stack;
 public class Intermedio {
     
     public static ArrayList<String> codigoIntermedio;
-    private Etiketa etiketaSuper;
+    private Etiketa etiketaSuper = new Etiketa(true);
     private Etiketa etiketaUltima;
     public int indiceActual;
     private int indiceFinal;

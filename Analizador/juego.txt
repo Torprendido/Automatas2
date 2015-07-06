@@ -1,0 +1,18 @@
+inicio
+	entero pensado <- 55\
+	entero adivina <- 0\
+	cadena c <- 'que numero ando pensando?'\
+	adivina <- 4 + 4 - 45*4/5/(4 - 2)\
+	mientras(adivina >< pensado) ¿
+		imprimir(c)\
+		leer(adivina)\
+		si (adivina > pensado) ¿
+			imprimir('el numero que ando pensando es menor')\
+		? sino (adivina < pensado) ¿ 
+			imprimir('el numero que ando pensando es mayor')\
+		? no ¿
+			imprimir('ganaste por vago')\
+		?
+		
+	?
+fin
